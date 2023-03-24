@@ -1,0 +1,12 @@
+{% extends  layout %}
+{% block  content %}
+  <h1>{{message}}</h1>
+  <form action='/set' method="post" enctype="multipart/form-data">
+    <input type='text' name='name' >
+    <input type='email' name='email' id='email'>
+    <input type='number' name='student-id' id='id'>
+  <input type='submit'>
+  </form>
+  
+{% endblock %}
+
