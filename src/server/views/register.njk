@@ -1,0 +1,17 @@
+{% extends  layout %}
+{% block  content %}
+
+  <form action='/register' method="POST" enctype="multipart/form-data">
+  <label for='name'>Name</label>
+    <input type='text' name='name' id='name'>
+    <label for='email'>Name</label>
+    <input type='email' name='username' id='email'>
+    <label for='id'>Student ID nr</label>
+    <input type='number' name='student-id' id='id'>
+  <button type='submit'>Start Survey</button>
+  </form>
+ {{ user.name }}
+  
+  
+{% endblock %}
+
