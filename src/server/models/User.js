@@ -9,11 +9,12 @@ const UserSchema = new Schema({
 		index: {unique: true}
 	},
   name: String,
-  email: {
+  username: {
 		type: String,
 		required: true,
 		index: {unique: true}
 	},
+	password: String
 })
 
 const User = mongoose.model('User', UserSchema);

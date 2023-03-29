@@ -9,8 +9,8 @@ export const passportMiddleware = (app) => {
   app.use(session({
 		// this should be changed to something cryptographically secure for production
 		secret: process.env.SESSION_SECRET,
-		resave: false,
-		saveUninitialized: true,
+		resave: true,
+		saveUninitialized: false,
 		// automatically extends the session age on each request. useful if you want
 		// the user's activity to extend their session. If you want an absolute session
 		// expiration, set to false
@@ -40,10 +40,11 @@ export const passportMiddleware = (app) => {
 				done(err);
 			});
 	});
-	passport.use(new LocalStrategy((username, password, done) => {
+	passport.use(new LocalStrategy((usernameField, passwordField, done) => {
 		const errorMsg = 'Invalid username or password';
 		User.findOne({
-			username: username
+			username: usernameField,
+			password: passwordField
 		})
 			.then(user => {
 				// if no matching user was found...

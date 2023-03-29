@@ -9,7 +9,9 @@ const upload = multer();
 import {register, doRegister, login, doLogin} from '../controllers/AuthController.js'
 // import {default as homeRoutes} from './homeRoutes.js';
 
-import defaultExport, * as homeRoutes from "./homeRoutes.js";
+import homeRoutes from "./homeRoutes.js";
+import authRoutes from "./authRoutes.js";
+import surveyRoutes from "./surveyRoutes.js";
 
 let router = express.Router();
 // export const indexRouter = (req, res, next) => {
@@ -17,7 +19,9 @@ let router = express.Router();
 // }
 
 
-router.use('/', async () => homeRoutes);
+router.get('/', homeRoutes);
+router.use('/', authRoutes);
+router.use('/survey', surveyRoutes);
 
 // router.get('/welcome', async (req, res, next)=> {
 // const user = req.user;
@@ -36,5 +40,6 @@ router.use('/', async () => homeRoutes);
 
 
 export default router;
+
 
 

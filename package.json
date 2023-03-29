@@ -14,6 +14,7 @@
     "build:server": "vite build --outDir docs/server --ssr src/server/server.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.6",

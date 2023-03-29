@@ -1,6 +1,6 @@
 import express from  'express';
 
-import {register, doRegister, login, doLogin} from '../controllers/AuthController.js';
+
 import {saveData} from '../helpers/saveData.js';
 import bodyParser from 'body-parser';
 import multer from 'multer';
@@ -27,8 +27,9 @@ router.get('/', async (req, res, next) => {
 
 
 router.post('/', upload.array(), async (req, res, next) => {
-  let newUser = new User(req.body);
+  
   try {
+  let newUser = new User(req.body);
   let data = {
     message: 'SPET1',
     layout:  'layout.njk',
@@ -46,11 +47,5 @@ router.post('/', upload.array(), async (req, res, next) => {
 })
 
 
-
-router.get('/login', async() => login);
-router.post('/login',upload.array(), doLogin);
-
-router.get('/register',() => register);
-router.post('/register',upload.array(), doRegister);
 
 export default router;

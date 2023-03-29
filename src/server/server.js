@@ -8,7 +8,7 @@ import expressNunjucks from 'express-nunjucks';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import logger from 'morgan';
-import { default as indexRouter } from './routes/index.js';
+import routes from './routes/index.js';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import multer from 'multer';
@@ -47,11 +47,12 @@ app.use(
 
 app.use('/', express.static('static/'));
 
+
 app.set('view engine', 'njk');
 app.set('views', path.join(__dirname, 'views'));
 
+
 const njk = expressNunjucks(app, {
-  // Defines globals.
   loader: nunjucks.FileSystemLoader,
 });
 
@@ -74,9 +75,7 @@ passportMiddleware(app);
 
 // app.set('view engine', 'njk');
 
-app.use('/', function () {
-  indexRouter;
-});
+app.use(routes);
 // app.post('/set', upload.array(), (req, res,next) => {
 //   const userInfo = req.body;
 
@@ -93,20 +92,24 @@ app.use('/', function () {
 // } )
 // app.post('/set', setUser)
 
-app.get('*', function (req, res, next) {
+app.get('*', async function (req, res, next) {
   let err = new Error(`${req.ip} tried to reach ${req.originalUrl}`); // Tells us which IP tried to reach a particular URL
   err.statusCode = 404;
   err.shouldRedirect = true; //New property on err so that our middleware will redirect
   next();
 });
 
-app.use((error, req, res, next) => {
-  console.error(error);
-  res.render('error.njk', {
-    error: error,
-    layout: 'layout.njk',
-  });
-  next();
+app.use(async (err, req, res, next) => {
+
+  try {
+    console.error(err);
+    res.render('error.njk', {
+      error: err,
+      layout:  'layout.njk',
+    });
+  } catch (err) {
+    next()
+  }
 });
 
 // app.get('/step1', indexRouter);
