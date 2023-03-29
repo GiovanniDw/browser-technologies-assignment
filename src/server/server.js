@@ -1,20 +1,21 @@
 
 import express from 'express';
-import ViteExpress from 'vite-express'
-import { createServer as createViteServer } from 'vite'
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
-import nunjucks from 'nunjucks'
-import path from 'path'
+import ViteExpress from 'vite-express';
+import { createServer as createViteServer } from 'vite';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import nunjucks from 'nunjucks';
+import expressNunjucks from 'express-nunjucks';
+import path from 'path';
 import { fileURLToPath } from 'url';
-import logger from 'morgan'
-import {indexRouter, setUser} from './routes/index.js'
-import dotenv  from "dotenv"
-import fs from 'fs'
+import logger from 'morgan';
+import indexRouter from './routes/index.js';
+import dotenv  from "dotenv";
+import fs from 'fs';
 import multer from 'multer';
-const upload = multer()
+const upload = multer();
 
-dotenv.config()
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,19 +36,38 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const router = express.Router()
+
 app.use(bodyParser.json())
-// app.use(cookieParser());
+
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
-app.use(cookieParser())
-app.use(logger('dev'))
-app.use(express.static(path.join(__dirname, '../public')))
-nunjucks.configure(__dirname + '/views', {
-    autoescape: true,
-    express: app,
+app.use('/', express.static('static/'));
+
+app.set('view engine', 'njk');
+app.set('views', path.join(__dirname, 'views'));
+
+const njk = expressNunjucks(app, {
+  // Defines globals.
+  loader: nunjucks.FileSystemLoader
+  
 });
+
+
+
+
+
+// app.use(cookieParser());
+
+// app.use(express.static(path.join(__dirname, '../public')))
+
+
+
+// nunjucks.configure(__dirname + '/views', {
+//     autoescape: true,
+//     express: app,
+// });
 
 
 // app.use(express.json())
@@ -63,29 +83,40 @@ nunjucks.configure(__dirname + '/views', {
 // app.set('view engine', 'njk');
 
 app.use('/', indexRouter);
-app.post('/set', upload.none(), (req, res,next) => {
-  const userInfo = req.body;
-  console.log(userInfo)
-    try {
-       res.cookie('cookie', 'userInfo').send('cookie send') m,
-      //  saveData(userInfo)
-      res.redirect('/');
-    } catch (error) {
-      next(error)
-    }
+// app.post('/set', upload.array(), (req, res,next) => {
+//   const userInfo = req.body;
+
+//     try {
+//       console.log(req.body)
+//        console.log(userInfo)
+      
+//       //  saveData(userInfo)
+//        res.json(req.body);
+//     } catch (error) {
+//       next(error)
+//     }
 
 
 
-} )
-app.post('/set', setUser)
+// } )
+// app.post('/set', setUser)
 
 
-app.get('*', function (req, res, next) {
+app.get('*', async (req, res, next) => {
 	let err = new Error(`${req.ip} tried to reach ${req.originalUrl}`); // Tells us which IP tried to reach a particular URL
 	err.statusCode = 404;
 	err.shouldRedirect = true; //New property on err so that our middleware will redirect
-	next(err);
+	next();
 });
+
+app.use( async (error, req, res, next) => {
+	console.error(error);
+	res.render('error.njk', {
+		error
+	});
+	next()
+});
+
 
 // app.get('/step1', indexRouter);
 // router.get('/', async  function(req, res, next) {

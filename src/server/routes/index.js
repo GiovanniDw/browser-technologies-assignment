@@ -1,12 +1,16 @@
 import express from  'express'
 const router = express.Router()
 import {saveData} from '../helpers/saveData.js'
+import bodyParser from 'body-parser';
+import multer from 'multer';
+// import {User} from '../models/User.js'
+const upload = multer()
 // export const indexRouter = (req, res, next) => {
 
 // }
 
-export const indexRouter = router.use('/', async (req, res, next) => {
-  req.cookies['user']
+router.get('/', async (req, res, next) => {
+  console.log(req.body)
   let  data = {
     message: 'Hello world!',
     layout:  'layout.njk',
@@ -14,26 +18,31 @@ export const indexRouter = router.use('/', async (req, res, next) => {
   }
   try {
     res.render('index.njk', data)  
-  } catch (error) {
-		next(error);
-  } 
+  } catch (err) {
+		next(err);
+  } finally {
+    console.log(req.body)
+  }
   
 })
 
 
-export const setUser = router.use('/set', async (req, res, next) => {
+router.post('/', upload.array(), async (req, res, next) => {
+  try {
+    let newUser = new User(req.body);
   let  data = {
     message: 'SPET1',
     layout:  'layout.njk',
-    title: 'SPET1'
+    title: 'SPET1',
+    user: newUser
   }
-  try {
-    res.render('index.njk', data)  
-  } catch (error) {
-    res.redirect('/');
-		next(error);
+    console.log(req.body)
+    return res.render('index.njk', data)  
+  
+  } catch (err) {
+		next(err);
   } finally {
-    next()
+    console.log(req.body)
   }
 })
 
