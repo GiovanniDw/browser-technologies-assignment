@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 import passportLocalMongoose from 'passport-local-mongoose';
 import mongooseAutoPopulate from 'mongoose-autopopulate';
-import bcrypt from 'bcrypt';
 
 const WORK_FACTOR = 10;
 
@@ -53,14 +52,14 @@ UserSchema.plugin(passportLocalMongoose);
 // 	});
 // });
 
-UserSchema.methods.validatePassword = function (candidatePassword) {
-	return new Promise((resolve, reject) => {
-		bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-			if (err) return reject(err);
-			resolve(isMatch);
-		});
-	});
-};
+// UserSchema.methods.validatePassword = function (candidatePassword) {
+// 	return new Promise((resolve, reject) => {
+// 		User.compare(candidatePassword, this.password, function (err, isMatch) {
+// 			if (err) return reject(err);
+// 			resolve(isMatch);
+// 		});
+// 	});
+// };
 
 
 const User = mongoose.model('User', UserSchema);

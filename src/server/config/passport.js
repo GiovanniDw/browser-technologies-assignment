@@ -12,7 +12,6 @@ const newLocalStrategy = LocalStrategy.Strategy;
 export default function(app) {
 	app.use(cookieParser(process.env.SESSION_SECRET))
 	app.use(session({
-		deserializeUser: true,
 		// this should be changed to something cryptographically secure for production
 		secret: process.env.SESSION_SECRET,
 		resave: false,
@@ -24,15 +23,15 @@ export default function(app) {
 		name: 'localhost',
 
 		// set your options for the session cookie
-		// cookie: {
-		// 	httpOnly: true,
-		// 	// the duration in milliseconds that the cookie is valid
-		// 	maxAge: 60 * 60 * 1000, // 20 minutes
-		// 	// recommended you use this setting in production if you have a well-known domain you want to restrict the cookies to.
-		// 	// domain: 'party-finderr.herokuapp.com',
-		// 	// recommended you use this setting in production if your site is published using HTTPS
-		// 	// secure: true,
-		// }
+		cookie: {
+			httpOnly: true,
+			// the duration in milliseconds that the cookie is valid
+			maxAge: 60 * 60 * 1000, // 20 minutes
+			// recommended you use this setting in production if you have a well-known domain you want to restrict the cookies to.
+			// domain: 'party-finderr.herokuapp.com',
+			// recommended you use this setting in production if your site is published using HTTPS
+			// secure: true,
+		}
 	}));
 	// passport.serializeUser((user, done) => {
 	// 	done(null, user);
@@ -49,9 +48,10 @@ export default function(app) {
 
 	// passport.use(User.createStrategy());
 
-	passport.use(new newLocalStrategy(User.authenticate()));
+	passport.use(new LocalStrategy.Strategy(User.authenticate()));
 
-	
+	passport.serializeUser(User.serializeUser());
+	passport.deserializeUser(User.deserializeUser());
 	// passport.use(new LocalStrategy((usernameField, passwordField, done) => {
 	// 	const errorMsg = 'Invalid username or password';
 	// 	User.findOne({
@@ -81,10 +81,6 @@ export default function(app) {
 	// that will serialize/deserialize the user from the session cookie and add
 	// them to req.user
 	app.use(passport.session());
-
-	passport.serializeUser(User.serializeUser());
-	passport.deserializeUser(User.deserializeUser());
-
 }
 
 
