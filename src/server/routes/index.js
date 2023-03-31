@@ -8,10 +8,11 @@ import User from '../models/User.js'
 const upload = multer();
 import {register, doRegister, login, doLogin} from '../controllers/AuthController.js'
 // import {default as homeRoutes} from './homeRoutes.js';
-
+import connectEnsureLogin from 'connect-ensure-login';
 import homeRoutes from "./homeRoutes.js";
 import authRoutes from "./authRoutes.js";
 import surveyRoutes from "./surveyRoutes.js";
+import { isAuthenticated } from '../config/middleware/auth.js';
 
 let router = express.Router();
 // export const indexRouter = (req, res, next) => {
@@ -40,6 +41,7 @@ router.use('/survey', surveyRoutes);
 
 
 export default router;
+
 
 
 

@@ -2,14 +2,19 @@
 {% block  content %}
 
   <h1>{{message}}</h1>
-  <form action='/' method="post" enctype="multipart/form-data">
+    {% if error.message %}
+  {{error.message}}
+  {% endif %}
+  <form action='/login' method="post" enctype="multipart/form-data">
     <input type='text' name='name' >
     <input type='email' name='email' id='email'>
-    <input type='number' name='student-id' id='id'>
+    <input type='number' name='id' id='id'>
   <input value='submit' type='submit'>
   </form>
- {{ user.name }}
-  
+
+  <p>
+  {{user.username}}
+  </p>
   
 {% endblock %}
 

@@ -7,8 +7,12 @@
     <title>{{ title }}</title>
   </head>
   <body>
+    <header>
     <a href="/">Link</a>
     <a href="/register">Register</a>
+    <a href="/login">login</a>
+    <form action='/logout' method="POST"><button type='submit'>Logout</button></form>
+    </header>
     {% block content %} {% endblock %}
   </body>
 </html>

@@ -2,18 +2,21 @@ import express from 'express';
 import ViteExpress from 'vite-express';
 import { createServer as createViteServer } from 'vite';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import nunjucks from 'nunjucks';
 import expressNunjucks from 'express-nunjucks';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import logger from 'morgan';
-import routes from './routes/index.js';
+import flash from 'connect-flash';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import multer from 'multer';
-import connectMongo from './config/middleware/mongoose.js';
-import passportMiddleware from './config/passport.js';
+import routes from './routes/index.js';
+import mongoose from './config/middleware/mongoose.js';
+import passport from './config/passport.js';
+
+
 const upload = multer();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
@@ -35,17 +38,18 @@ const __dirname = path.dirname(__filename);
 // ]
 
 const app = express();
-const router = express.Router();
-
+app.use(logger('dev'));
+app.use('/', express.static('static/'));
 app.use(bodyParser.json());
 
 app.use(
   bodyParser.urlencoded({
-    extended: true,
+    extended: false,
   })
 );
+app.use(cookieParser());
+app.use(flash());
 
-app.use('/', express.static('static/'));
 
 
 app.set('view engine', 'njk');
@@ -56,7 +60,13 @@ const njk = expressNunjucks(app, {
   loader: nunjucks.FileSystemLoader,
 });
 
-passportMiddleware(app);
+passport(app);
+
+// app.use((req,res,next)=> {
+//   res.locals.user = req.user
+//   next();
+// })
+
 // app.use(cookieParser());
 
 // app.use(express.static(path.join(__dirname, '../public')))
@@ -92,25 +102,29 @@ app.use(routes);
 // } )
 // app.post('/set', setUser)
 
-app.get('*', async function (req, res, next) {
+app.get('*', function (req, res, next) {
   let err = new Error(`${req.ip} tried to reach ${req.originalUrl}`); // Tells us which IP tried to reach a particular URL
   err.statusCode = 404;
   err.shouldRedirect = true; //New property on err so that our middleware will redirect
   next();
 });
 
-app.use(async (err, req, res, next) => {
+app.use((req, res, next) => {
+  // Make `user` and `authenticated` available in templates
+  res.locals.user = req.user
+  res.locals.authenticated = !req.user.anonymous
+  next()
+})
 
-  try {
-    console.error(err);
-    res.render('error.njk', {
-      error: err,
-      layout:  'layout.njk',
-    });
-  } catch (err) {
-    next()
-  }
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.render('error.njk', {
+    layout: 'layout.njk',
+    message: err.message,
+    error: {}
+  });
 });
+
 
 // app.get('/step1', indexRouter);
 // router.get('/', async  function(req, res, next) {
@@ -123,16 +137,17 @@ app.use(async (err, req, res, next) => {
 //   res.render('index.njk', data)
 // })
 
-connectMongo()
+mongoose()
   .then(() => {
-    ViteExpress.listen(app, PORT, () => {
-      console.log('Server is listening on port 3000...');
-    });
     console.log('mongo connected');
-  })
-  .catch((err) => {
+    ViteExpress.listen(app, PORT, () => {    
+    
+      console.log('Server is listening on port 3000...');
+    })
+  }).catch((err) => {
     // an error occurred connecting to mongo!
     // log the error and exit
     console.error('Unable to connect to mongo.');
     console.error(err);
   });
+

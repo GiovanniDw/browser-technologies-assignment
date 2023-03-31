@@ -1,13 +1,22 @@
 {% extends  layout %}
 {% block  content %}
-
+<h1>register</h1>
   <form action='/register' method="POST" enctype="multipart/form-data">
+  {% if error %}
+  {{error.message}}
+{% endif %}
   <label for='name'>Name</label>
     <input type='text' name='name' id='name'>
-    <label for='email'>Name</label>
+    {{user.name}}
+    <label for='email'>Email</label>
+    {{user.email}} 
     <input type='email' name='username' id='email'>
-    <label for='id'>Student ID nr</label>
-    <input type='number' name='student-id' id='id'>
+      <label for='password'>password</label>
+    {{user.password}} 
+    <input type='password' name='password' id='password'>
+    <label for='id'>Student ID nr </label>
+    {{user.id}}
+    <input type='number' name='id' id='id'>
   <button type='submit'>Start Survey</button>
   </form>
  {{ user.name }}
