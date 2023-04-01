@@ -1,4 +1,5 @@
 import passport from 'passport';
+import passportLocal from 'passport-local';
 import User from '../models/User.js';
 import express from 'express';
 import jwt from 'passport-jwt';
@@ -117,63 +118,74 @@ export const login = async (req, res, next) => {
     });
   } catch (err) {
 		let data = {
-      error: err,
+      error: {message:err},
       layout: 'layout.njk',
     };
     res.render('login.njk', data);
-    next(err);
+    next();
   }
 };
 
+// export const doLogin = (req, res, next) => {
+// 	passport.authenticate('local', {
+// 	successRedirect: "/survey/",
+// 	failureRedirect: "/login",
+// 	failureFlash: 'failed'
+// },function(req, res, next) {
+// 	passport.authenticate('local', function(err, user, info) {
+// 			return done(null, false, {
+// 					message: err
+// 			});
+// 	});
+// })}
 
-export const doLogin = async (req, res, next) => {
-	try {
-		await User.authenticate();
+export const doLogin = (req, res, next) => {
+	const { password, username } = req.body;
+	
+ 	// try {
+	// 	const findThisUser = User.findByUsername(username)
+	// 	return User.authenticate('local', findThisUser)
+	// } catch (err) {
+	// 	next(err)
+	// }
+
+
 
 	
-	} catch (error) {
-		
-	}
+  if (!req.body.username) {
+    res.json({ success: false, message: 'Username was not given' });
+  } else if (!req.body.password) {
+    res.json({ success: false, message: 'Password was not given' });
+  } else {
+		console.log(req.body)
+  passport.authenticate('local', function (err, user, info, status) {
 
+		console.log(user)
+      if (err) {
+				res.json({ success: false, message: 'unknown error' });
+				next(err)
+      } else {
+        if (!user) {
+          res.json({
+            success: false,
+            message: 'username or password incorrect',
+          });
+        } else {
 
-
-	
-  // if (!req.body.username) {
-  //   res.json({ success: false, message: 'Username was not given' });
-  // } else if (!req.body.password) {
-  //   res.json({ success: false, message: 'Password was not given' });
-  // } else {
-	// 	console.log(req.body)
-  // passport.authenticate('local', function (err, user, info, status) {
-
-	// 	console.log(user)
-  //     if (err) {
-	// 			res.json({ success: false, message: 'unknown error' });
-	// 			next(err)
-  //     } else {
-  //       if (!user) {
-  //         res.json({
-  //           success: false,
-  //           message: 'username or password incorrect',
-  //         });
-  //       } else {
-	// 				req.login(user, (er) => {
-	// 					if (er) {
-	// 						res.json({ success: false, message: er });
-	// 					} else {
-	// 						res.json({ success: true, message: 'Your account has been saved' });
-	// 					}
-	// 				});
-	// 				console.log(user)
-  //         res.json({
-  //           success: true,
-  //           message: 'Authentication successful',
-  //           user: req.user,
-  //         });
-  //       }
-  //     }
-  //   })(req, res, next);
-  // }
+					User.authenticate(user)
+					// req.login(user, (er) => {
+					// 	if (er) {
+					// 		res.json({ success: false, message: er });
+					// 	} else {
+					// 		res.json({ success: true, message: 'Your account has been saved' });
+					// 	}
+					// });
+					console.log(user)
+          res.redirect('/survey')
+        }
+      }
+    })(req, res, next);
+  }
 };
 
 export const logout = (req, res, next) => {

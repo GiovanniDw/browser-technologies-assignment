@@ -10,7 +10,7 @@ const upload = multer();
 const router = express.Router();
 
 router.get('/login', login);
-router.post('/login', doLogin);
+router.post('/login', upload.array(), doLogin);
 
 router.get('/register', register);
 router.post('/register', upload.array(), doRegister);

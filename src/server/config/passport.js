@@ -131,6 +131,10 @@ const authUser = (user, password, done) => {
 	// that will serialize/deserialize the user from the session cookie and add
 	// them to req.user
 	app.use(passport.session());
+
+
+
+	
 }
 
 
