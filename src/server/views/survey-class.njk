@@ -1,0 +1,29 @@
+{% extends  layout %}
+{% block  content %}
+
+<h1>Welcome</h1> 
+
+<p>{{user.id}}</p>
+<p>{{user.name}}</p>
+{# <p>{{{session}}}</p> #}
+  
+
+<form action='survey-start'>
+  These classes
+  {% for class in classes %}
+  <input type='checkbox' name='classes' id={{class}} value={{class}}>
+  <label for='{{class}}'>
+    {{class.name}}
+  </label>
+  {% endfor %}
+
+  
+
+
+
+
+</form>
+
+  
+{% endblock %}
+ 

@@ -54,7 +54,7 @@ export const doRegister = (req, res, next) => {
 	const {username, email, password, name, id} = req.body
   User.register(
     new User({username: req.body.username, email: req.body.username, name: req.body.name, id: id,}),
-    req.body.password,
+    username,
     function (err, user) {
       if (err) {
         res.json({
@@ -143,7 +143,7 @@ export const doLogin = (req, res, next) => {
 	const {username, email, password, name, id} = req.body
   User.findByUsername(
     username,
-    password,
+    username,
     function (err, user) {
       if (err) {
         res.json({

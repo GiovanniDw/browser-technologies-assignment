@@ -5,6 +5,24 @@ import mongooseAutoPopulate from 'mongoose-autopopulate';
 
 const WORK_FACTOR = 10;
 
+
+
+const ClassSchema = new Schema({
+  name: {
+		type: String,
+		index: {unique: true}
+	},
+  teachers: Array,
+  dateStart: Date,
+  dateEnd: Date,
+  weeks: Number,
+  classRating: Number,
+  difficultyRating: Number,
+  explanationRating: Number,
+  personalUnderstanding: String
+})
+export const Class = mongoose.model('Class', ClassSchema);
+
 const UserSchema = new Schema({
   id: Number,
   name: String,
@@ -17,13 +35,13 @@ const UserSchema = new Schema({
 		index: {unique: true}
 	},
 	password: String,
-	classes: [{
-		type: [Schema.Types.ObjectId],
-		ref: 'Class',
-		autopopulate: true
-	}],
-	admin: Boolean
+	classes: [ClassSchema],
+	admin: Boolean,
+	currentClass: String,
 })
+
+
+
 
 UserSchema.plugin(mongooseAutoPopulate);
 UserSchema.plugin(passportLocalMongoose);
