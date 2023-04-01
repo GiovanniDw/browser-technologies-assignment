@@ -1,17 +1,18 @@
 {% extends  layout %}
 {% block  content %}
   <h1>login</h1>
-  <form action='/login' method="POST" enctype="multipart/form-data">
+  
   {% if error %}
   {{error}}
 {% endif %}
 
 {{user}}
+<form action='/login' method="POST" enctype="multipart/form-data">
     <label for='email'>Email</label>
-    <input type='email' name='username' id='username'>
+    <input type='email' name='username' id='username' required>
     <label for='password'>password</label>
     {{user.password}}
-    <input type='password' name='password' id='password'>
+    <input type='password' name='password' id='password' required>
   <button type='submit'>login</button>
   </form>
  {{ user.name }}

@@ -13,6 +13,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import multer from 'multer';
 import routes from './routes/index.js';
+// import mongoose from 'mongoose';
 import mongoose from './config/middleware/mongoose.js';
 import passport from './config/passport.js';
 
@@ -44,10 +45,10 @@ app.use(bodyParser.json());
 
 app.use(
   bodyParser.urlencoded({
-    extended: false,
+    extended: true,
   })
 );
-app.use(cookieParser());
+
 app.use(flash());
 
 
@@ -118,7 +119,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.render('error.njk', {
+  return res.render('error.njk', {
     layout: 'layout.njk',
     message: err.message,
     error: {}
@@ -136,6 +137,29 @@ app.use((err, req, res, next) => {
 
 //   res.render('index.njk', data)
 // })
+
+
+// const startServer = async () => {
+//   try {
+//     await mongoose.connect(process.env.MONGO_DB, {
+//       dbName: process.env.DB_NAME,
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     });
+//     console.log('MongoDB connected');
+    
+//     ViteExpress.listen(app, PORT, () => {
+//       console.log(`Server is listening on port ${PORT}...`);
+//     });
+//   } catch (err) {
+//     console.error('Unable to connect to mongo.');
+//     console.error(err);
+//     process.exit(1);
+//   }
+// };
+
+// startServer();
+
 
 mongoose()
   .then(() => {

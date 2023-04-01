@@ -117,7 +117,7 @@ export const login = async (req, res, next) => {
     });
   } catch (err) {
 		let data = {
-      error: { message: err },
+      error: err,
       layout: 'layout.njk',
     };
     res.render('login.njk', data);
@@ -126,36 +126,54 @@ export const login = async (req, res, next) => {
 };
 
 
-export const doLogin = (req, res, next) => {
-  if (!req.body.username) {
-    res.json({ success: false, message: 'Username was not given' });
-  } else if (!req.body.password) {
-    res.json({ success: false, message: 'Password was not given' });
-  } else {
-		console.log(req.body)
-  passport.authenticate('local', function (err, user, info, status) {
-		 User.findById(user._id)
-		console.log(user)
-      if (err) {
-				res.json({ success: false, message: 'unknown error' });
-				next(err)
-      } else {
-        if (!user) {
-          res.json({
-            success: false,
-            message: 'username or password incorrect',
-          });
-        } else {
-					console.log(user)
-          res.json({
-            success: true,
-            message: 'Authentication successful',
-            user: req.user,
-          });
-        }
-      }
-    })(req, res, next);
-  }
+export const doLogin = async (req, res, next) => {
+	try {
+		await User.authenticate();
+
+	
+	} catch (error) {
+		
+	}
+
+
+
+	
+  // if (!req.body.username) {
+  //   res.json({ success: false, message: 'Username was not given' });
+  // } else if (!req.body.password) {
+  //   res.json({ success: false, message: 'Password was not given' });
+  // } else {
+	// 	console.log(req.body)
+  // passport.authenticate('local', function (err, user, info, status) {
+
+	// 	console.log(user)
+  //     if (err) {
+	// 			res.json({ success: false, message: 'unknown error' });
+	// 			next(err)
+  //     } else {
+  //       if (!user) {
+  //         res.json({
+  //           success: false,
+  //           message: 'username or password incorrect',
+  //         });
+  //       } else {
+	// 				req.login(user, (er) => {
+	// 					if (er) {
+	// 						res.json({ success: false, message: er });
+	// 					} else {
+	// 						res.json({ success: true, message: 'Your account has been saved' });
+	// 					}
+	// 				});
+	// 				console.log(user)
+  //         res.json({
+  //           success: true,
+  //           message: 'Authentication successful',
+  //           user: req.user,
+  //         });
+  //       }
+  //     }
+  //   })(req, res, next);
+  // }
 };
 
 export const logout = (req, res, next) => {
