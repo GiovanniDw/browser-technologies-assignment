@@ -53,7 +53,7 @@ export const register = async (req, res, next) => {
 export const doRegister = (req, res, next) => {
 	const {username, email, password, name, id} = req.body
   User.register(
-    new User({ email: req.body.username, username: req.body.username,name: req.body.name, id: id, password: password  }),
+    new User({username: req.body.username, email: req.body.username, name: req.body.name, id: id,}),
     req.body.password,
     function (err, user) {
       if (err) {
@@ -66,7 +66,7 @@ export const doRegister = (req, res, next) => {
           if (er) {
             res.json({ success: false, message: er });
           } else {
-            res.json({ success: true, message: 'Your account has been saved' });
+            res.redirect('/survey/')
           }
         });
       }
@@ -140,6 +140,31 @@ export const login = async (req, res, next) => {
 // })}
 
 export const doLogin = (req, res, next) => {
+	const {username, email, password, name, id} = req.body
+  User.findByUsername(
+    username,
+    password,
+    function (err, user) {
+      if (err) {
+        res.json({
+          success: false,
+          message: 'Your account could not be saved. Error: ' + err,
+        });
+      } else {
+        req.login(user, (er) => {
+          if (er) {
+            res.json({ success: false, message: er });
+          } else {
+            res.redirect('/survey/')
+          }
+        });
+      }
+    }
+  );
+};
+
+
+export const doLoginOLD = (req, res, next) => {
 	const { password, username } = req.body;
 	
  	// try {
@@ -171,8 +196,17 @@ export const doLogin = (req, res, next) => {
             message: 'username or password incorrect',
           });
         } else {
+					const signInUser = User.findByUsername(user.username, user.password)
+					console.log(signInUser)
+					req.logIn(user, (er) => {
+						if (er) {
+							res.json({ success: false, message: er });
+						} else {
+							console.log('user login')
+							console.log(user)
 
-					User.authenticate(user)
+						}
+					});
 					// req.login(user, (er) => {
 					// 	if (er) {
 					// 		res.json({ success: false, message: er });
@@ -189,6 +223,7 @@ export const doLogin = (req, res, next) => {
 };
 
 export const logout = (req, res, next) => {
+	req.logOut()
   req.logout((err) => {
     if (err) {
       return next(err);
