@@ -4,23 +4,29 @@ import { createServer as createViteServer } from 'vite';
 import bodyParser from 'body-parser';
 import nunjucks from 'nunjucks';
 import expressNunjucks from 'express-nunjucks';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import logger from 'morgan';
 import flash from 'connect-flash';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import fs from 'fs';
+import fs from 'node:fs';
 import multer from 'multer';
-import routes from './routes/index.js';
+import routes from './server/routes/index.js';
 // import mongoose from 'mongoose';
-import mongoose from './config/middleware/mongoose.js';
-import passport from './config/passport.js';
+import mongoose from './server/config/middleware/mongoose.js';
+import passport from './server/config/passport.js';
+import cors from 'cors';
+import compression from 'compression';
 
+
+dotenv.config();
+
+// const isDev = process.env.NODE_ENV === 'development'
 
 const upload = multer();
 const PORT = process.env.PORT || 3000;
-dotenv.config();
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,9 +44,13 @@ const __dirname = path.dirname(__filename);
 
 // ]
 
+
 const app = express();
+app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 app.use(logger('dev'));
-app.use('/', express.static('static/'));
+app.use(compression())
+app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.json());
 
 app.use(
@@ -49,12 +59,12 @@ app.use(
   })
 );
 
-app.use(flash());
+// app.use(flash());
 
 
 
 app.set('view engine', 'njk');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'server/views'));
 
 
 const njk = expressNunjucks(app, {
@@ -122,7 +132,7 @@ app.use((err, req, res, next) => {
   res.render('error.njk', {
     layout: 'layout.njk',
     message: err.message,
-    error: {}
+    error: err.status,
   });
 });
 
@@ -161,12 +171,13 @@ app.use((err, req, res, next) => {
 // startServer();
 
 
+
 mongoose()
   .then(() => {
     console.log('mongo connected');
     ViteExpress.listen(app, PORT, () => {
     
-      console.log('Server is listening on port 3000...');
+      console.log(`Server is listening on port ${PORT}...`);
     })
   }).catch((err) => {
     // an error occurred connecting to mongo!

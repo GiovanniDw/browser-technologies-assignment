@@ -1,0 +1,24 @@
+{
+  "src/server.js": [
+  ],
+  "src/server/config/middleware/mongoose.js": [
+  ],
+  "src/server/config/passport.js": [
+  ],
+  "src/server/controllers/AuthController.js": [
+  ],
+  "src/server/controllers/SurveyController.js": [
+  ],
+  "src/server/helpers/SurveyHelper.js": [
+  ],
+  "src/server/models/User.js": [
+  ],
+  "src/server/routes/authRoutes.js": [
+  ],
+  "src/server/routes/homeRoutes.js": [
+  ],
+  "src/server/routes/index.js": [
+  ],
+  "src/server/routes/surveyRoutes.js": [
+  ]
+}

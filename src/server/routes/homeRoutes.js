@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
   try {
+    
     let  data = {
       message: 'Hello world!',
       layout:  'layout.njk',
@@ -20,6 +21,10 @@ router.get('/', (req, res, next) => {
       },
       user: req.user
     }
+    console.log('user')
+    console.log(req.user)
+    console.log('body')
+    console.log(req.body)
     return res.render('index.njk', data)
   } catch (err) {
     console.log(err)

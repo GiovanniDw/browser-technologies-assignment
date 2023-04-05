@@ -3,7 +3,7 @@ import express from  'express';
 import multer from 'multer';
 import {isAuthenticated} from '../config/middleware/auth.js';
 import {register, doRegister, login, doLogin} from '../controllers/AuthController.js';
-import {start, startSurvey, surveyClass} from '../controllers/SurveyController.js';
+import {start, surveyClass, saveClasses} from '../controllers/SurveyController.js';
 import User from '../models/User.js';
 
 import connectEnsureLogin from 'connect-ensure-login';
@@ -24,9 +24,9 @@ const Classes = [{
 const upload = multer();
 const router = express.Router();
 router.get('/', start);
-router.post('/set', upload.array(), startSurvey);
+router.post('/start', upload.array(), saveClasses);
 
-router.get('/classes', surveyClass);
+router.get('/:id', surveyClass);
 
 // router.get('/welcome', requiresLogin , welcome);
 

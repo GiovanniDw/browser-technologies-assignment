@@ -1,5 +1,7 @@
-import { defineConfig, loadEnv } from 'vite';
-import {fileURLToPath} from 'url'
+import { defineConfig, loadEnv, createLogger, searchForWorkspaceRoot } from 'vite';
+import {fileURLToPath} from 'url';
+import commonjs from '@rollup/plugin-commonjs';
+import path from 'path';
 // export default defineConfig({
 //   server: {
 //     port: 3000,
@@ -9,32 +11,42 @@ import {fileURLToPath} from 'url'
 //   },
 // });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 export default defineConfig({
   appType: 'custom',
   base: "/",
+  plugins: [commonjs(),],
+  optimizeDeps: {exclude: ["fsevents"]},
+  publicDir: 'src/public',
+  css: {
+    devSourcemap: true
+  },
   server: {
     port: 3000,
-    sourcemapIgnoreList(sourcePath, sourcemapPath) {
-      return sourcePath.includes('node_modules')
-    }
+    origin: 'http://127.0.0.1:3000',
   },
   preview: {
     port: 8080,
   },
-  resolve: {
-    alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-},
+  ssr: {
+    target: 'node'
+  },
+  hmr: {
+    clientPort: 5173
+  },
   build: {
     outDir: 'docs',
     sourcemap: true,
     manifest: true,
+    ssrManifest: true,
+    ssr: './src/server.js',
     minify: false,
     rollupOptions: {
       // overwrite default .html entry
-      input: '/src/server/views/index.njk',
+      input: './src/server.js',
     },
   }
 },({ command, mode }) => {

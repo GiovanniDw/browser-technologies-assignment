@@ -155,7 +155,7 @@ export const doLogin = (req, res, next) => {
           if (er) {
             res.json({ success: false, message: er });
           } else {
-            res.redirect('/survey/')
+            res.redirect('/classes/')
           }
         });
       }
@@ -215,7 +215,7 @@ export const doLoginOLD = (req, res, next) => {
 					// 	}
 					// });
 					console.log(user)
-          res.redirect('/survey')
+          res.redirect('/classes')
         }
       }
     })(req, res, next);

@@ -30,18 +30,35 @@ export const saveClasses = (username, classes) => {
 	});
 };
 
-export const addClass = (userID, Class) => {
+export const addClass = (userID, ClassName) => {
 	return new Promise(async (resolve, reject) => {
 		try {
-			const user = await User.findByUsername(userID);
-			// const checkDup = await user.classes.includes(Class);
-			if (user) {
-				user.classes.push({name: Class });
+			console.log(ClassName)
+			const classItem = {
+				name: ClassName
+			}
+			const user = await User.findById(userID);
+			const checkDup = await user.classes.includes(classItem);
+			if (!checkDup) {
+				await user.classes.push(classItem);
 				await user.save();
 			}
 			resolve('has resolved');
 		} catch (err) {
 			reject(err);
+		}
+	});
+}
+
+export const myClasses = (userID) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const user = await User.findById(userID).select('classes').populate('classes');
+			resolve(user.classes);
+		} catch (err) {
+			reject({
+				type: 'error'
+			});
 		}
 	});
 }

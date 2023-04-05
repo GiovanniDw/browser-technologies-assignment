@@ -5,7 +5,7 @@ import passport from 'passport';
 import flash from 'connect-flash';
 import {Strategy as LocalStrategy} from 'passport-local';
 // import LocalStrategy from 'passport-local-mongoose';
-import MongoStore from 'connect-mongo';
+
 import User from '../models/User.js';
 import mongoose from 'mongoose';
 import { connect } from 'mongoose';
@@ -150,3 +150,5 @@ const authUser = (user, password, done) => {
 // });
 
 // 'mongodb+srv://admin:<password>@browsertech.amdujfn.mongodb.net/?retryWrites=true&w=majority'
+
+

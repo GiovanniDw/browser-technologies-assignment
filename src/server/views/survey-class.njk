@@ -1,25 +1,14 @@
-{% extends  layout %}
+{% extends  'layout.njk' %}
 {% block  content %}
 
-<h1>Welcome</h1> 
+<h1>{{currentClass}}</h1> 
 
-<p>{{user.id}}</p>
+<p>{{req.params.id}}</p>
 <p>{{user.name}}</p>
 {# <p>{{{session}}}</p> #}
   
 
-<form action='survey-start'>
-  These classes
-  {% for class in classes %}
-  <input type='checkbox' name='classes' id={{class}} value={{class}}>
-  <label for='{{class}}'>
-    {{class.name}}
-  </label>
-  {% endfor %}
-
-  
-
-
+<form action='/classes/save/1'>
 
 
 </form>
