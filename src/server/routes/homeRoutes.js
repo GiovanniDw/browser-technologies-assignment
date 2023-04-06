@@ -30,7 +30,7 @@ router.get('/', (req, res, next) => {
     console.log(err)
 		next(err);
   } 
-})
+});
 
 
 // router.post('/', upload.array(), async (req, res, next) => {

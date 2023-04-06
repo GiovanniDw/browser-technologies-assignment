@@ -66,7 +66,7 @@ export const doRegister = (req, res, next) => {
           if (er) {
             res.json({ success: false, message: er });
           } else {
-            res.redirect('/survey/')
+            res.redirect('/classes/start')
           }
         });
       }
@@ -151,11 +151,12 @@ export const doLogin = (req, res, next) => {
           message: 'Your account could not be saved. Error: ' + err,
         });
       } else {
-        req.login(user, (er) => {
+      req.login(user, (er) => {
           if (er) {
             res.json({ success: false, message: er });
           } else {
-            res.redirect('/classes/')
+            res.redirect('/classes/start')
+            next()
           }
         });
       }
@@ -224,11 +225,12 @@ export const doLoginOLD = (req, res, next) => {
 
 export const logout = (req, res, next) => {
 	req.logOut()
+  
   req.logout((err) => {
     if (err) {
       return next(err);
     }
-    res.redirect('/');
+    res.redirect('/login');
   });
 };
 

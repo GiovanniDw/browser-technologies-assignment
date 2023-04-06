@@ -55,7 +55,7 @@ app.use(bodyParser.json());
 
 app.use(
   bodyParser.urlencoded({
-    extended: true,
+    extended: true
   })
 );
 
@@ -124,8 +124,8 @@ app.use((req, res, next) => {
   // Make `user` and `authenticated` available in templates
   res.locals.user = req.user
   res.locals.authenticated = !req.user.anonymous
-  next()
-})
+  next();
+});
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
@@ -176,7 +176,6 @@ mongoose()
   .then(() => {
     console.log('mongo connected');
     ViteExpress.listen(app, PORT, () => {
-    
       console.log(`Server is listening on port ${PORT}...`);
     })
   }).catch((err) => {

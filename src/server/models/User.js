@@ -8,6 +8,7 @@ const WORK_FACTOR = 10;
 const ClassSchema = new Schema({
   name: {
     type: String,
+    unique: true,
   },
   teachers: Array,
   dateStart: Date,

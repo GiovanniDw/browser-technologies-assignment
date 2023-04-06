@@ -5,53 +5,32 @@
     <p>{{ user.id }}</p>
     <p>{{ user.name }}</p>
     {# <p>{{{session}}}</p> #}
-    <form action='/classes/start' method="POST" enctype="multipart/form-data">
+    <form action="/classes/start" method="POST" enctype="multipart/form-data">
       <h2>Choose the classes u followed in 2023</h2>
       {% for class in classes %}
-        {% for userClass in user.classes %}
-          {% if userClass.name == class %}
+        {% set checked = false %}
+        {% for obj in user.classes %}
+          {% if obj.name == class %}
+            {% set checked = true %}
+          {% endif %}
+        {% endfor %}
+        {% if checked %}
+          <div>
+            <input type="checkbox" name="classes" value="{{ class }}" id="{{class}}" checked>
+              <label for='{{ class }}'>
+                {{ class }}
+              </label>
+            </div>
+          {% else %}
             <div>
-              <input type='checkbox' name='classes' id={{ class }} value={{ class }} checked>
-                {{ user.classes.name }}
+              <input type="checkbox" name="classes" value="{{ class }}" id="{{class}}">
                 <label for='{{ class }}'>
                   {{ class }}
                 </label>
               </div>
-            {% else %}
-              <div>
-                <input type='checkbox' name='classes' id="{{ class }}" value="{{ class }}">
-                  {{ user.classes.name }}
-                  <label for='{{ class }}'>
-                    {{ class }}
-                  </label>
-                </div>
-              {% endif %}
-            {%- endfor %}
-          {%- endfor %}
-{% for class in classes %}
-  {% set checked = false %}
-  {% for obj in user.classes %}
-    {% if obj.name == class %}
-      {% set checked = true %}
-    {% endif %}
-  {% endfor %}
-  {% if checked %}
-  <div>
-    <input type="checkbox" name="{{ class }}" value="{{ class }}" checked>
-        <label for='{{ class }}'>
-                    {{ class }}
-                  </label>
-                  </div>
-  {% else %}
-  <div>
-    <input type="checkbox" name="{{ class }}" value="{{ class }}">
-        <label for='{{ class }}'>
-                    {{ class }}
-                  </label>
-                  </div>
-  {% endif %}
-{% endfor %}
-              <button type="submit">Confirm Classes</button>
-            </form>
-          </section>
-        {% endblock %}
+            {% endif %}
+          {% endfor %}
+          <button type="submit">Confirm Classes</button>
+        </form>
+      </section>
+    {% endblock %}

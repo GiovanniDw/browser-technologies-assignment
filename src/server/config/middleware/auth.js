@@ -1,6 +1,6 @@
-export const isAuthenticated = async (req, res, next) => {
+export const isAuthenticated = (req, res, next) => {
   if (req.user) next()
-		else next('/login')
+		else res.redirect('/login')
 	next();
 }
 
@@ -12,3 +12,4 @@ export const user = {
 		next();
 	}
 }
+

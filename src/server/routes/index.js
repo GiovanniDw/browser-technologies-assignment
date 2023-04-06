@@ -14,7 +14,7 @@ import authRoutes from "./authRoutes.js";
 import surveyRoutes from "./surveyRoutes.js";
 import { isAuthenticated } from '../config/middleware/auth.js';
 
-let router = express.Router();
+const router = express.Router();
 // export const indexRouter = (req, res, next) => {
 
 // }

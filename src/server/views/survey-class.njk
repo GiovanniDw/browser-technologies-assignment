@@ -1,18 +1,56 @@
-{% extends  'layout.njk' %}
-{% block  content %}
+{% extends 'layout.njk' %} {% block content %}
+<h1>{{ currentClass }}</h1>
+  <p>{{ req.params.id }}</p>
+  <p>{{ user.name }}</p>
+  {#
+  <p>{{{session}}}</p>
+  #}
 
-<h1>{{currentClass}}</h1> 
+<form action="/classes/survey/{{currentClass._id}}">
+<ul>
+{% for class in classes %}
+{% if currentClass.name == currentPage %}
+  <li class='active'>{{class.name}}</li>
+{% endif %}
+  <li>{{class.name}}</li>
+{% endfor %}
 
-<p>{{req.params.id}}</p>
-<p>{{user.name}}</p>
-{# <p>{{{session}}}</p> #}
-  
+<a href=''>{{currentPage}}</a>
+</ul>  
+  <div>
+    <label for="name">Name</label>
+    <input type="text" name="name" value="{{ currentClass.name }}" />
+  </div>
+  <div>
+    <label for="teachers">Teachers</label>
+    <input type="text" name="teachers" value="{{ currentClass.name }}" />
+  </div>
+  <div>
+    <label for="dateStart">Start Date</label>
+    <input type="date" name="dateStart" value="{{ currentClass.name }}" />
+    <label for="dateEnd">End Date</label>
+    <input type="date" name="dateEnd" value="{{ currentClass.name }}" />
+  </div>
+  <div>
+    <label for="classRating">What did u think of {{currentClass.name}}</label>
+    <input type="range" name="classRating" value="{{ currentClass.name }}" />
+  </div>
+  <div>
+    <label for="difficultyRating">What did u think of {{currentClass.name}}</label>
+    <input type="range" name="difficultyRating" value="{{ currentClass.name }}" />
+  </div>
+  <div>
+    <label for="explanationRating">How clear was the  {{currentClass.name}}</label>
+    <input type="range" name="explanationRating" value="{{ currentClass.name }}" />
+  </div>
+    <div>
+    <label for="personalUnderstanding">How clear was the  {{currentClass.name}}</label>
+    <input type="range" name="personalUnderstanding" value="{{ currentClass.name }}" />
+  </div>
+  <button type="submit">
 
-<form action='/classes/save/1'>
-
-
+</button>
 </form>
 
-  
+<a href="/classes/survey/{{nextClass}}">Next</a>
 {% endblock %}
- 
