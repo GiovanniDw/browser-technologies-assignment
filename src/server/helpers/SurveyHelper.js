@@ -37,10 +37,10 @@ export const addClass = (userID, ClassName) => {
 				name: ClassName
 			}
 			const user = await User.findById(userID);
-			const checkDup = await user.classes.findOneAndUpdate(classItem);
+			const checkDup = await user.classes.some(item => item.name !== classItem.name);
 			console.log(ClassName)
 			
-			if (!checkDup == false || checkDup == null) {
+			if (!checkDup) {
 				user.classes.push(classItem);
 				await user.save();
 			} 

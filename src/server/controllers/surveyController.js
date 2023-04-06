@@ -64,7 +64,7 @@ export const saveClasses = async (req, res, next) => {
   
 
       const thisUser = await User.findById(userID);
-    selectedClasses.forEach(async element => {
+    await selectedClasses.forEach(async element => {
       console.log(element)
       
       console.log('1')
