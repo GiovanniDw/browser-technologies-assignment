@@ -30,7 +30,11 @@
               </div>
             {% endif %}
           {% endfor %}
-          <button type="submit">Confirm Classes</button>
+          <button type="submit">Edit Classes</button>
+          {% if user.classes[0] %}
+          <a href="/classes/survey/{{user.classes[0].name}}">Next</a>  
+          {% endif %}
+          
         </form>
       </section>
     {% endblock %}

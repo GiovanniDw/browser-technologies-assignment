@@ -1,12 +1,13 @@
 {% extends 'layout.njk' %} {% block content %}
-<h1>{{ currentClass }}</h1>
+<h1>{{ currentPage }}</h1>
   <p>{{ req.params.id }}</p>
+  <p>{{ message }}</p>
   <p>{{ user.name }}</p>
   {#
   <p>{{{session}}}</p>
   #}
 
-<form action="/classes/survey/{{currentClass._id}}">
+<form action="/classes/survey/{{currentPage}}" method="POST" enctype="multipart/form-data">
 <ul>
 {% for class in classes %}
 {% if currentClass.name == currentPage %}
@@ -23,7 +24,7 @@
   </div>
   <div>
     <label for="teachers">Teachers</label>
-    <input type="text" name="teachers" value="{{ currentClass.name }}" />
+    <input type="text" name="teachers"/>
   </div>
   <div>
     <label for="dateStart">Start Date</label>
@@ -32,8 +33,8 @@
     <input type="date" name="dateEnd" value="{{ currentClass.name }}" />
   </div>
   <div>
-    <label for="classRating">What did u think of {{currentClass.name}}</label>
-    <input type="range" name="classRating" value="{{ currentClass.name }}" />
+    <label for="classRating">What did u think of {{ currentClass.name }}</label>
+    <input type="range" name="classRating" value="{{currentClass.name}}" />
   </div>
   <div>
     <label for="difficultyRating">What did u think of {{currentClass.name}}</label>
@@ -48,9 +49,17 @@
     <input type="range" name="personalUnderstanding" value="{{ currentClass.name }}" />
   </div>
   <button type="submit">
-
+Submit
 </button>
 </form>
 
 <a href="/classes/survey/{{nextClass}}">Next</a>
+
+<code>{{currentClass}}</code>
+
+
+
+<code>{{firstClass}}</code>
+
+
 {% endblock %}
