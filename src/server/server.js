@@ -49,8 +49,7 @@ const app = express();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 app.use(logger('dev'));
 app.use(compression())
-app.use('/', express.static(path.join(__dirname, '../public')));
-app.use('/', express.static(path.join(__dirname, '../static')));
+app.use('/', express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.json());
 
 app.use(
