@@ -12,10 +12,10 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import fs from 'node:fs';
 import multer from 'multer';
-import routes from './server/routes/index.js';
+import routes from './routes/index.js';
 // import mongoose from 'mongoose';
-import mongoose from './server/config/middleware/mongoose.js';
-import passport from './server/config/passport.js';
+import mongoose from './config/middleware/mongoose.js';
+import passport from './config/passport.js';
 import cors from 'cors';
 import compression from 'compression';
 
@@ -49,8 +49,8 @@ const app = express();
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
 app.use(logger('dev'));
 app.use(compression())
-app.use('/', express.static(path.join(__dirname, 'public')));
-app.use('/', express.static(path.join(__dirname, 'static')));
+app.use('/', express.static(path.join(__dirname, '../public')));
+app.use('/', express.static(path.join(__dirname, '../static')));
 app.use(bodyParser.json());
 
 app.use(
@@ -64,7 +64,7 @@ app.use(
 
 
 app.set('view engine', 'njk');
-app.set('views', path.join(__dirname, 'server/views'));
+app.set('views', path.join(__dirname, 'views'));
 
 
 const njk = expressNunjucks(app, {

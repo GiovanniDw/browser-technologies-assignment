@@ -40,8 +40,8 @@ router.post('/start', upload.array(), saveClasses);
 //     next(err)
 //   }
 // });
-router.get('/survey/:id', surveyClass);
-router.post('/survey/:id', postSurveyClass);
+router.get('/survey/:name', surveyClass);
+router.post('/survey/:name', upload.none(), postSurveyClass);
 
 
 // router.get('/welcome', requiresLogin , welcome);

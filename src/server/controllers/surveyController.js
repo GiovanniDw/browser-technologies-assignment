@@ -1,6 +1,7 @@
 import passport from 'passport';
 import User, { Class } from '../models/User.js';
-import {addClass } from '../helpers/SurveyHelper.js';
+import {addClass, updateClass } from '../helpers/SurveyHelper.js';
+import { user } from '../config/middleware/auth.js';
 
 const classes = ['css-to-the-rescue', 'web-app-from-scratch', 'browser-technologies', 'progressive-web-apps'];
 
@@ -35,33 +36,6 @@ export const saveClasses = async (req, res, next) => {
     const selectedClasses = req.body.classes;
     console.log(selectedClasses);
 
-    // const userToAddTo = User.findById(userID);
-
-
-
-
-    // for (let i = 0; i < selectedClasses.length; i++) {
-    //   let element = selectedClasses[i];
-    //   console.log(selectedClasses[i]);
-    //   // console.log(userToAddTo.classes[i].name)
-
-    //   console.log(element)
-    //   if  (userToAddTo.classes[i].name == undefined || userToAddTo.classes[i].name == null) {
-    //    addClass(userID, element)
-    //   }
-    // }
-      // if (userToAddTo.classes.length() !== 0) {
-        
-      //   // addClass(userID, element);
-      //   selectedClasses.forEach(element => {
-      //     let newObject = {
-      //       name: element
-      //     }
-      //     userToAddTo.classes.push(newObject);});
-        
-      // } 
-      // await userToAddTo.save();
-  
 
       const thisUser = await User.findById(userID);
     await selectedClasses.forEach(async element => {
@@ -71,6 +45,9 @@ export const saveClasses = async (req, res, next) => {
       console.log(thisUser)
       let alreadyExists = await thisUser.classes.some(item => item.name == element);
       try {
+        console.log('alreadyExists')
+        console.log(alreadyExists)
+
         if (alreadyExists) {
           console.log(`${element} already in user classes`)
           next()
@@ -106,52 +83,54 @@ export const saveClasses = async (req, res, next) => {
 
 export const surveyClass = async (req, res, next) => {
   try {
-    const classPage = req.params.id
-    console.log(classPage)
-    const user = req.user;
-
-    const {classes} = user;
+    const className = req.params.id;
+    // let classID = req.params.id;
+    const {user} = req.user;
+    const userID = req.user._id;
+    // let thisClass = await User.findById(classID);
+    const thisUser = await User.findById(userID);
+    
+    const {classes} = thisUser;
+    console.log('classes')
+    console.log(classes)
+    // const {classes} = user;
     console.log(user)
-    // if(classPage)
-    if (classes.some(obj => obj.name !== classPage)) {
-      console.log(classPage)
+    // if(classID)
+    if (classes.some(obj => obj.name == className)) {
+      classID === obj._id;
+      console.log(classID)
       // return res.redirect(`/classes/survey/${classes[0].name}`)
     } else  {
       console.log('no calss page')
     }
     let  data = {
-      message: 'Hello world!',
+      message: '1',
       layout:  'layout.njk',
       title: 'Nunjucks example',
       user: req.user,
-      classes: req.user.classes,
+      classes: thisUser.classes,
+      currentClass: req.params.name,
       currentPage: req.params.id,
-      firstClass: req.user.classes[0],
-      secondClass: req.user.classes[1],
-      thirdClass: req.user.classes[2],
-      fourthClass: req.user.classes[3],
-      fifthClass: req.user.classes[4],
+      firstClass: thisUser.classes[0],
+      secondClass: thisUser.classes[1],
+      thirdClass: thisUser.classes[2],
+      fourthClass: thisUser.classes[3],
     }
     for (let i of classes) {
       if (i.name == req.params.id) {
         console.log(i)
         data = {
-          message: 'Css',
+          message: '2',
           layout:  'layout.njk',
           title: 'Nunjucks example',
           user: req.user,
           currentClass: i,
-          nextClass: i++,
-          classes: req.user.classes
+          nextClass: i+=1,
+          classes: thisUser.classes
         }
       }
     }
 
-
-
-
-
-  
     res.render('survey-class.njk', data)  
   } catch (err) {
     console.log(err)
@@ -161,39 +140,18 @@ export const surveyClass = async (req, res, next) => {
 }
 
 export const postSurveyClass = async (req, res, next) => {
-  const classPage = req.params.id;
-  const {classInfo} = req.body
-
   try {
+    console.log(req.body);
+  const userID = req.user._id;
+  const classID = req.params.name;
+  const thisUser = await User.findById(userID);
+  const thisClass = await Class.findById(classID);
+  const {classInfo} = req.body;
+
+  // await updateClass(userID, classID, classInfo);
+  console.log(classInfo);
     const {classes} = req.user;
-    let  data = {
-      message: 'Hello world!',
-      layout:  'layout.njk',
-      title: 'Nunjucks example',
-      user: req.user,
-      classes: req.user.classes
-    }
-    for (let i of classes) {
-      if (i.name == req.params.id) {
-        console.log(i)
-        data = {
-          message: 'Css',
-          layout:  'layout.njk',
-          title: 'Nunjucks example',
-          user: req.user,
-          currentClass: i,
-          nextClass: i++,
-          classes: req.user.classes
-        }
-      }
-    }
-
-
-
-
-
   
-    res.render('survey-class.njk', data)  
   } catch (err) {
     console.log(err)
 		next(err);
