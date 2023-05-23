@@ -73,32 +73,32 @@ const UserSchema = new Schema({
 UserSchema.plugin(passportLocalMongoose);
 
 
-UserSchema.pre('save', async function (next) {
-  const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
+// UserSchema.pre('save', async function (next) {
+//   const salt = await bcrypt.genSalt();
+//   this.password = await bcrypt.hash(this.password, salt);
+//   next();
+// });
 
 
-UserSchema.statics.login = async function (username, password) {
-  console.log('loginschema');
-  console.log(username + password);
-  let user = await this.findOne({ username });
-  if (user) {
-    console.log(user);
-    console.log('compare pass')
-    console.log(password)
-    console.log(user.password)
-    let isAuthenticated = await bcrypt.compare(username, user.password);
-    if (isAuthenticated) {
-      return user;
-    } else {
-      throw Error('Incorrect password');
-    }
-  } else {
-    throw Error('Incorrect email');
-  }
-};
+// UserSchema.statics.login = async function (username, password) {
+//   console.log('loginschema');
+//   console.log(username + password);
+//   let user = await this.findOne({ username });
+//   if (user) {
+//     console.log(user);
+//     console.log('compare pass')
+//     console.log(password)
+//     console.log(user.password)
+//     let isAuthenticated = await bcrypt.compare(username, user.password);
+//     if (isAuthenticated) {
+//       return user;
+//     } else {
+//       throw Error('Incorrect password');
+//     }
+//   } else {
+//     throw Error('Incorrect email');
+//   }
+// };
 
 
 
