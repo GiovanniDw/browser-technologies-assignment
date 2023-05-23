@@ -7,7 +7,7 @@ export const isAuthenticated = (req, res, next) => {
 export const user = {
   hasAuthorization: function (req, res, next) {
 		if (req.profile.id != req.user.id) {
-			return res.redirect('/survey/');
+			return res.redirect('/login');
 		}
 		next();
 	}

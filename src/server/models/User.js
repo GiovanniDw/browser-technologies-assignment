@@ -2,6 +2,8 @@ import mongoose, { SchemaTypes } from 'mongoose';
 const Schema = mongoose.Schema;
 import passportLocalMongoose from 'passport-local-mongoose';
 import mongooseAutoPopulate from 'mongoose-autopopulate';
+import bcrypt from 'bcrypt';
+
 
 const WORK_FACTOR = 10;
 
@@ -74,7 +76,6 @@ UserSchema.plugin(passportLocalMongoose);
 UserSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
-
   next();
 });
 
@@ -88,7 +89,7 @@ UserSchema.statics.login = async function (username, password) {
     console.log('compare pass')
     console.log(password)
     console.log(user.password)
-    let isAuthenticated = await bcrypt.compare(password, user.password);
+    let isAuthenticated = await bcrypt.compare(username, user.password);
     if (isAuthenticated) {
       return user;
     } else {

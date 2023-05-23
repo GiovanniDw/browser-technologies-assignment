@@ -22,7 +22,7 @@ const router = express.Router();
 
 router.get('/', homeRoutes);
 router.use('/', authRoutes);
-router.use('/classes', surveyRoutes);
+router.use('/course', surveyRoutes);
 
 // router.get('/welcome', async (req, res, next)=> {
 // const user = req.user;

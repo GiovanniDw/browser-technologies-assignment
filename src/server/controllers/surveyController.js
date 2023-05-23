@@ -2,7 +2,7 @@ import passport from 'passport';
 import User, { Class } from '../models/User.js';
 import {addClass, updateClass } from '../helpers/SurveyHelper.js';
 import { user } from '../config/middleware/auth.js';
-
+import { courseData } from '../helpers/courseData.js';
 const classes = ['css-to-the-rescue', 'web-app-from-scratch', 'browser-technologies', 'progressive-web-apps'];
 
 export const start = async (req, res, next) => {
@@ -10,7 +10,7 @@ export const start = async (req, res, next) => {
       console.log(req.body)
     let  data = {
       message: 'Hello world!',
-      layout:  'layout.njk',
+      layout:  'base.njk',
       title: 'Nunjucks example',
       user: req.user,
       userClasses: req.user.classes,
@@ -68,9 +68,9 @@ export const saveClasses = async (req, res, next) => {
     console.log(thisUser)
     // const UserClasses = await User.findById(userID).classes;
 
-    // if (UserClasses) res.redirect(`/classes/${UserClasses[0].name}`);
+    // if (UserClasses) res.redirect(`/course/${UserClasses[0].name}`);
     if (thisUser.classes[0].name !== undefined) {
-      await res.redirect(`/classes/survey/${thisUser.classes[0].name}`)
+      await res.redirect(`/course/survey/${thisUser.classes[0].name}`)
     } else {
       res.redirect('back')
     }
@@ -99,18 +99,18 @@ export const surveyClass = async (req, res, next) => {
     if (classes.some(obj => obj.name == className)) {
       classID === obj._id;
       console.log(classID)
-      // return res.redirect(`/classes/survey/${classes[0].name}`)
+      // return res.redirect(`/course/survey/${classes[0].name}`)
     } else  {
       console.log('no calss page')
     }
     let  data = {
       message: '1',
-      layout:  'layout.njk',
+      layout:  'base.njk',
       title: 'Nunjucks example',
       user: req.user,
       classes: thisUser.classes,
       currentClass: req.params.name,
-      currentPage: req.params.id,
+      currentPage: req.route.path,
       firstClass: thisUser.classes[0],
       secondClass: thisUser.classes[1],
       thirdClass: thisUser.classes[2],
@@ -121,7 +121,7 @@ export const surveyClass = async (req, res, next) => {
         console.log(i)
         data = {
           message: '2',
-          layout:  'layout.njk',
+          layout:  'base.njk',
           title: 'Nunjucks example',
           user: req.user,
           currentClass: i,
@@ -158,3 +158,48 @@ export const postSurveyClass = async (req, res, next) => {
     
   }
 }
+
+const filterValue = (obj, key, value)=> obj.filter(v => v[key] === value);
+
+
+const getObjBySlug = (objArray, slug) => objArray.find(obj => obj.url === slug);
+
+
+
+export const courseElement = async (req, res, next) => {
+  const user = req.user
+  console.log('req.params')
+  console.log(req.params)
+  const page = req.route.path
+  // const currentCourse = filterValue(courseData, 'slug', page)
+
+  const currentCourse = getObjBySlug(courseData, page)
+
+  console.log('currentCourse')
+  console.log(currentCourse)
+  console.log('page')
+  console.log(page)
+  try {
+let  data = {
+      user: user,
+      message: '1',
+      layout:  'base.njk',
+      title: 'Nunjucks example',
+      classes: courseData,
+      currentClass: currentCourse,
+      currentCourse: currentCourse,
+      currentPage: req.params.id,
+      nextCourse: currentCourse.nextCourse,
+      prevCourse: currentCourse.prevCourse
+    }
+
+    res.render('survey-class.njk', data)
+  } catch (error) {
+    console.log(error)
+  }
+
+
+
+}
+
+

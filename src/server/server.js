@@ -46,15 +46,32 @@ const __dirname = path.dirname(__filename);
 
 
 const app = express();
-app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
+
+
+const CorsOptions = {
+  origin: 'http://localhost:5173',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: '*',
+  exposedHeaders: '*',
+  credentials: true,
+  // optionsSuccessStatus: 204 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+
+app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
+app.use(cors(CorsOptions));
+app.options('*', cors(CorsOptions));
 app.use(logger('dev'));
-app.use(compression())
+app.use(compression());
 app.use('/', express.static(path.join(__dirname, 'static')));
+app.use('/', express.static(path.join(__dirname, '../assets')));
+app.use('/', express.static(path.join(__dirname, '../../public')));
 app.use(bodyParser.json());
 
 app.use(
   bodyParser.urlencoded({
-    extended: true
+    extended: true,
+    credentials: true
   })
 );
 
@@ -129,7 +146,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error.njk', {
-    layout: 'layout.njk',
+    layout: 'base.njk',
     message: err.message,
     error: err.status,
   });
@@ -140,7 +157,7 @@ app.use((err, req, res, next) => {
 // router.get('/', async  function(req, res, next) {
 //   let  data = {
 //     message: 'Hello world!',
-//     layout:  'layout.njk',
+//     layout:  'base.njk',
 //     title: 'Nunjucks example'
 //   }
 

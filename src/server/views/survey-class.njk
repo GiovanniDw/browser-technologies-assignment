@@ -1,20 +1,24 @@
-{% extends 'layout.njk' %} {% block content %}
+{% extends 'base.njk' %} {% block content %}
 <h1>{{ currentPage }}</h1>
   <p>{{ req.params.id }}</p>
   <p>{{ message }}</p>
-  <p>{{ user.name }}</p>
+   {% if user %}
+   <p>{{ user.name }}</p>
+  {% endif %}
   {#
   <p>{{{session}}}</p>
   #}
 
-<form action="/classes/survey/{{currentPage}}" method="POST" enctype="multipart/form-data">
+<form action="/course/survey/{{currentPage}}" method="POST" enctype="multipart/form-data">
 <ul>
 {% for class in classes %}
 {% if currentClass.name == currentPage %}
   <li class='active'>{{class.name}}</li>
-{% endif %}
+{% else %}
   <li>{{class.name}}</li>
+  {% endif %}
 {% endfor %}
+
 
 <a href=''>{{currentPage}}</a>
 </ul>  
@@ -52,14 +56,14 @@
 Submit
 </button>
 </form>
-
-<a href="/classes/survey/{{nextClass}}">Next</a>
-
+<a href="/course{{prevCourse}}">back</a>
+<a disabled href="/course{{nextCourse}}">next</a>
+<div>div</div>
 <code>{{currentClass}}</code>
 
 
 
-<code>{{firstClass}}</code>
+<code>{{user.name}}</code>
 
 
 {% endblock %}

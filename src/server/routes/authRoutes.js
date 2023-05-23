@@ -25,7 +25,7 @@ router.post('/logout', logout);
 //   try {
 //     let  data = {
 //       message: 'Hello world!',
-//       layout:  'layout.njk',
+//       layout:  'base.njk',
 //       title: 'Nunjucks example',
 //       user: req.session.user,
 //       error: {

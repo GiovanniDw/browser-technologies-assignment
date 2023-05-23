@@ -1,11 +1,11 @@
-{% extends  'layout.njk' %}
+{% extends  'base.njk' %}
 {% block  content %}
   <section>
     <h1>Welcome</h1>
     <p>{{ user.id }}</p>
     <p>{{ user.name }}</p>
     {# <p>{{{session}}}</p> #}
-    <form action="/classes/start" method="POST" enctype="multipart/form-data">
+    <form action="/course/start" method="POST" enctype="multipart/form-data">
       <h2>Choose the classes u followed in 2023</h2>
       {% for class in classes %}
         {% set checked = false %}
@@ -32,7 +32,7 @@
           {% endfor %}
           <button type="submit">Edit Classes</button>
           {% if user.classes[0] %}
-          <a href="/classes/survey/{{user.classes[0].name}}">Next</a>  
+          <a href="/course/{{user.classes[0].name}}">Next</a>  
           {% endif %}
           
         </form>

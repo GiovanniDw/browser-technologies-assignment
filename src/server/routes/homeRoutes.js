@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
     
     let  data = {
       message: 'Hello world!',
-      layout:  'layout.njk',
+      layout:  'base.njk',
       title: 'Nunjucks example',
       error: {
         message: req.session.message
@@ -37,7 +37,7 @@ router.get('/', (req, res, next) => {
 //   try {
 //   let data = {
 //     message: 'SPET1',
-//     layout:  'layout.njk',
+//     layout:  'base.njk',
 //     title: 'SPET1',
 //   }
 //     res.render('index.njk', data)

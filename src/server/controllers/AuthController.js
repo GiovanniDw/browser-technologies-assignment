@@ -9,7 +9,7 @@ export const register = async (req, res, next) => {
   try {
     
       let data = {
-        layout: 'layout.njk',
+        layout: 'base.njk',
       };
 
       res.render('register.njk', data);
@@ -17,7 +17,7 @@ export const register = async (req, res, next) => {
   } catch (err) {
     let data = {
       error: { message: err },
-      layout: 'layout.njk',
+      layout: 'base.njk',
     };
     res.render('register.njk', data);
     next();
@@ -36,14 +36,14 @@ export const register = async (req, res, next) => {
 // 		} catch (err) {
 // 			console.log(err)
 // 			return res.render('register.njk', {
-// 				layout: 'layout.njk',
+// 				layout: 'base.njk',
 // 				error: {message: err},
 // 				user: newUser,
 // 			});
 // 		}
 // 	} else {
 // 		return res.render('register.njk', {
-// 			layout: 'layout.njk',
+// 			layout: 'base.njk',
 // 			error: { message: user },
 // 			user: newUser,
 // 		});
@@ -66,7 +66,7 @@ export const doRegister = (req, res, next) => {
           if (er) {
             res.json({ success: false, message: er });
           } else {
-            res.redirect('/classes/start')
+            res.redirect('/course/start')
           }
         });
       }
@@ -120,12 +120,12 @@ export const login = async (req, res, next) => {
 
 
      res.render('login.njk', {
-      layout: 'layout.njk',
+      layout: 'base.njk',
     });
   } catch (err) {
 		let data = {
       error: {message:err},
-      layout: 'layout.njk',
+      layout: 'base.njk',
     };
     res.render('login.njk', data);
     next();
@@ -163,7 +163,7 @@ export const doLogin = (req, res, next) => {
           if (er) {
             res.json({ success: false, message: er });
           } else {
-            res.redirect('/classes/start')
+            res.redirect('/course/start')
             next()
           }
         });
@@ -263,7 +263,7 @@ export const logout = (req, res, next) => {
 // 	      });
 // 	    } else {
 // 	      return res.render('error.njk', {
-// 					layout:  'layout.njk',
+// 					layout:  'base.njk',
 // 	        errors: [
 // 	          {
 // 	            message: 'email already registered',
