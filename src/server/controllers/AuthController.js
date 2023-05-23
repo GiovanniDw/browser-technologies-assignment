@@ -112,7 +112,13 @@ export const doRegister = (req, res, next) => {
 // 	}
 
 export const login = async (req, res, next) => {
+  const {username, email, password, name, id} = req.body;
+
+
   try {
+
+
+
      res.render('login.njk', {
       layout: 'layout.njk',
     });
@@ -123,6 +129,8 @@ export const login = async (req, res, next) => {
     };
     res.render('login.njk', data);
     next();
+  } finally {
+    
   }
 };
 
@@ -148,7 +156,7 @@ export const doLogin = (req, res, next) => {
       if (err) {
         res.json({
           success: false,
-          message: 'Your account could not be saved. Error: ' + err,
+          message: 'Can Not Login. Error: ' + err,
         });
       } else {
       req.login(user, (er) => {
