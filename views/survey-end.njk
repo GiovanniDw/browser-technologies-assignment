@@ -3,6 +3,7 @@
 <section class="form-container end">
   <h1>Thanks {{user.name}} for filling in the survey</h1>
     <ul class="form-steps">
+      <li><a href=/course/start>0</a></li>
         {% for class in classes %}
           {% if class.name == currentClass.name %}
             <li class='active'>{{ class.id }}</li>

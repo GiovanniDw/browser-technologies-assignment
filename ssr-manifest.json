@@ -13,13 +13,7 @@
   ],
   "src/server/models/User.js": [
   ],
-  "src/server/routes/authRoutes.js": [
-  ],
-  "src/server/routes/homeRoutes.js": [
-  ],
   "src/server/routes/index.js": [
-  ],
-  "src/server/routes/surveyRoutes.js": [
   ],
   "src/server/server.js": [
   ]
