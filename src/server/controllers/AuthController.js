@@ -76,6 +76,7 @@ export const doRegister = (req, res, next) => {
       }
     }
   );
+  next()
 };
 
 // export const doRegister = async (req, res, next) => {

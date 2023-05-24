@@ -20,7 +20,7 @@ export default defineConfig({
   base: "/",
   plugins: [commonjs(),],
   optimizeDeps: {exclude: ["fsevents"]},
-  publicDir: 'src/public',
+  publicDir: './public',
   css: {
     devSourcemap: true
   },
@@ -38,15 +38,17 @@ export default defineConfig({
     clientPort: 5173
   },
   build: {
+    emptyOutDir: true,
+    assetsDir: 'public',
     outDir: 'docs',
     sourcemap: true,
     manifest: true,
     ssrManifest: true,
-    ssr: './src/server.js',
+    ssr: './src/server/server.js',
     minify: false,
     rollupOptions: {
       // overwrite default .html entry
-      input: './src/server/server.js',
+      input: './src/main.js',
     },
   }
 },({ command, mode }) => {

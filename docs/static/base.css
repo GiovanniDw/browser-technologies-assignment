@@ -1,0 +1,110 @@
+/* color palette from <https://github.com/vuejs/theme> */
+:root {
+  --color-white: #ffffff;
+  --color-white-soft: #f8f8f8;
+  --color-white-mute: #f2f2f2;
+
+  --color-black: #181818;
+  --color-black-soft: #222222;
+  --color-black-mute: #282828;
+
+  --color-indigo: #2c3e50;
+  --color-blue-active: rgb(0, 174, 255);
+  --color-blue: rgb(59, 137, 255);
+  --color-blue-hover: rgb(0, 120, 205);
+  --color-green: hsla(160, 100%, 37%, 1);
+  --color-green-op: hsla(160, 100%, 37%, 0.2);
+  --color-orange: hsla(34, 100%, 54%, 1);
+  --color-red: hsla(0, 100%, 54%, 1);
+
+  --color-divider-light-1: rgba(60, 60, 60, 0.29);
+  --color-divider-light-2: rgba(60, 60, 60, 0.12);
+  --color-divider-dark-1: rgba(84, 84, 84, 0.65);
+  --color-divider-dark-2: rgba(84, 84, 84, 0.48);
+
+  --color-text-light-1: var(--color-indigo);
+  --color-text-light-2: rgba(60, 60, 60, 0.66);
+  --color-text-dark-1: var(--color-white);
+  --color-text-dark-2: rgba(235, 235, 235, 0.64);
+  --color-text-primary: var(--color-blue);
+  --color-text-primary-hover: var(--color-blue-hover);
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: var(--color-white);
+  --color-background-soft: var(--color-white-soft);
+  --color-background-mute: var(--color-white-mute);
+
+  --color-background-theme: var(--color-blue);
+
+  --color-border: var(--color-divider-light-2);
+  --color-border-hover: var(--color-divider-light-1);
+
+  --color-heading: var(--color-text-light-1);
+  --color-text: var(--color-text-light-1);
+  --color-text-invert: var(--color-text-dark-1);
+  --color-text-theme: var(--color-blue);
+
+  --section-gap: 160px;
+  --icon-size: 1.25em;
+
+  --color-succes: var(--color-green);
+  --color-alert: var(--color-orange);
+  --color-error: var(--color-red);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-black);
+    --color-background-soft: var(--color-black-soft);
+    --color-background-mute: var(--color-black-mute);
+
+    --color-border: var(--color-divider-dark-2);
+    --color-border-hover: var(--color-divider-dark-1);
+
+    --color-heading: var(--color-text-dark-1);
+    --color-text: var(--color-text-dark-2);
+    --color-text-invert: var(--color-text-light-1);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  font-weight: normal;
+}
+
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  max-height: 100vh;
+  max-width: 100vw;
+  height: 100%;
+  overflow: auto;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: auto;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  font-size: 16px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* 
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 500,
+  'GRAD' 0,
+  'opsz' 24
+} */

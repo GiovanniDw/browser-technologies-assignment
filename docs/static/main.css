@@ -1,0 +1,56 @@
+:root {
+  --color-white: #fff;
+  --color-dark: #111;
+  --desktop-max-width: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+img {
+  /* width: 100%; */
+  max-width: 100%;
+  max-height: 100%;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-size: 1em;
+}
+
+main {
+  height: 100%;
+  max-width: var(--desktop-max-width);
+  margin-inline: auto;
+}
+
+
+
+header {
+  width: 100%;
+  /* position: sticky; */
+  /* top: 0; */
+  height: 3.5em;
+  display: flex;
+  padding: .5em 3em;
+  justify-content: space-between;
+}
+
+header .header-end {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  gap: 1em;
+}
+
+header img {
+  height: 3em;
+}

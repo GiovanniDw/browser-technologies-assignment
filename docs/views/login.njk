@@ -1,0 +1,29 @@
+{% extends  'base.njk' %}
+{% block  content %}
+  <section class="form-container">
+    <h3>Continue the Survey?</h3>
+    {% if error %}
+      {{ error }}
+    {% endif %}
+    {{ user }}
+    <form action='/login' method="POST" enctype="multipart/form-data">
+      <label class="input-group" for='email'>
+        School Email
+        <input
+          pattern="[A-Za-z0-9._+-]+@[A-Za-z0-9 -]+\.[a-z]{2,}"
+          type='email'
+          name='username'
+          id='username'
+          placeholder='your.email@hva.nl'
+          required
+          autocomplete='email'></label>
+        <button type='submit'>login</button>
+      </form>
+      <div class='redirect'>
+        <p>First time here?</p>
+        <a href='/register'>
+          <small>Start the Survey</small>
+        </a>
+      </div>
+    </section>
+  {% endblock %}
