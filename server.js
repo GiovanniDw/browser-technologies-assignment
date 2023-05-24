@@ -524,4 +524,3 @@ mongoose().then(() => {
   console.error("Unable to connect to mongo.");
   console.error(err);
 });
-//# sourceMappingURL=server.js.map
