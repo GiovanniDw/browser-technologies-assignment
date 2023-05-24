@@ -46,7 +46,7 @@ export default defineConfig({
     minify: false,
     rollupOptions: {
       // overwrite default .html entry
-      input: './src/server.js',
+      input: './src/server/server.js',
     },
   }
 },({ command, mode }) => {

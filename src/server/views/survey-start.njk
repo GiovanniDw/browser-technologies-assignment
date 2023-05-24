@@ -1,10 +1,14 @@
 {% extends  'base.njk' %}
 {% block  content %}
-  <section>
+<section class="form-container">
     <h1>Welcome</h1>
     <p>{{ user.id }}</p>
     <p>{{ user.name }}</p>
     {# <p>{{{session}}}</p> #}
+  <div class="progress">
+
+
+  </div>
     <form action="/course/start" method="POST" enctype="multipart/form-data">
       <h2>Choose the classes u followed in 2023</h2>
       {% for class in classes %}
@@ -30,9 +34,9 @@
               </div>
             {% endif %}
           {% endfor %}
-          <button type="submit">Edit Classes</button>
+          <button type="submit">Save Selection</button>
           {% if user.classes[0] %}
-          <a href="/course/{{user.classes[0].name}}">Next</a>  
+          <a href="/course/css-to-the-rescue">Next</a>  
           {% endif %}
           
         </form>

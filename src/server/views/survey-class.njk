@@ -1,69 +1,87 @@
-{% extends 'base.njk' %} {% block content %}
-<h1>{{ currentPage }}</h1>
-  <p>{{ req.params.id }}</p>
+{% extends 'base.njk' %}
+{% block content %}
+  <section class='form-container'>
+    <h1>{{ currentClass.name }}</h1>
+{% if message %}
   <p>{{ message }}</p>
-   {% if user %}
-   <p>{{ user.name }}</p>
-  {% endif %}
-  {#
-  <p>{{{session}}}</p>
-  #}
+{% endif %}
+    {% if user %}
+      <p>user {{ user.name }}</p>
+    {% endif %}
+    {# <p>{{{session}}}</p> #}
+    <form id="{{currentCourse.slug}}" action="/course/survey/{{ currentCourse.slug }}" method="POST" enctype="multipart/form-data">
+      <ul class="form-steps">
+        {% for class in classes %}
+          {% if class.name == currentClass.name %}
+            <li class='active'>{{ class.id }}</li>
+          {% elif class.id > currentClass.id %}
+      <li><a disabled href=/course/{{class.slug}}>{{ class.id }}</a></li>
+          {% else %}
+            <li><a href=/course/{{class.slug}}>{{ class.id }}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <label for="name" class="input-group">
+        <span> Course Name </span> <input type="text" name="name" value="{{ currentClass.name }}"/>
+      </label>
+      <label for="teachers" class="input-group">
+        <span> Teachers </span> <input list="teachers" type="text" multiple name="teachers"/>
+      </label>
+      <datalist id=teachers>
+        <option value='{{currentClass.teachers}}'></option>          
+        {% for teacher in currentClass.teachers %}
 
-<form action="/course/survey/{{currentPage}}" method="POST" enctype="multipart/form-data">
-<ul>
-{% for class in classes %}
-{% if currentClass.name == currentPage %}
-  <li class='active'>{{class.name}}</li>
-{% else %}
-  <li>{{class.name}}</li>
-  {% endif %}
-{% endfor %}
-
-
-<a href=''>{{currentPage}}</a>
-</ul>  
-  <div>
-    <label for="name">Name</label>
-    <input type="text" name="name" value="{{ currentClass.name }}" />
-  </div>
-  <div>
-    <label for="teachers">Teachers</label>
-    <input type="text" name="teachers"/>
-  </div>
-  <div>
-    <label for="dateStart">Start Date</label>
-    <input type="date" name="dateStart" value="{{ currentClass.name }}" />
-    <label for="dateEnd">End Date</label>
-    <input type="date" name="dateEnd" value="{{ currentClass.name }}" />
-  </div>
-  <div>
-    <label for="classRating">What did u think of {{ currentClass.name }}</label>
-    <input type="range" name="classRating" value="{{currentClass.name}}" />
-  </div>
-  <div>
-    <label for="difficultyRating">What did u think of {{currentClass.name}}</label>
-    <input type="range" name="difficultyRating" value="{{ currentClass.name }}" />
-  </div>
-  <div>
-    <label for="explanationRating">How clear was the  {{currentClass.name}}</label>
-    <input type="range" name="explanationRating" value="{{ currentClass.name }}" />
-  </div>
-    <div>
-    <label for="personalUnderstanding">How clear was the  {{currentClass.name}}</label>
-    <input type="range" name="personalUnderstanding" value="{{ currentClass.name }}" />
-  </div>
-  <button type="submit">
-Submit
-</button>
-</form>
-<a href="/course{{prevCourse}}">back</a>
-<a disabled href="/course{{nextCourse}}">next</a>
-<div>div</div>
-<code>{{currentClass}}</code>
+        {% endfor %}
+      </datalist>
+      <div>
+        <label for="dateStart">Start Date <input type="date" name="dateStart" default="{{ currentClass.dateStart }}"/>
+        </label>
+        <label for="dateEnd">End Date <input type="date" name="dateEnd" value="{{ currentClass.dateEnd }}"/>
+        </label>
+      </div>
+      <label for="classRating" class="input-group">
+      <span> Course Rating</span> 
+      
+      <input list="rating" required type="range" min="0" max="10" value="0"  name="classRating" value="{{ currentClass.name }}"/>
+      </label>
+      <label for="difficultyRating" class="input-group">
+      <span>  Course material (how difficult is it) </span>
+      
+       <input list="rating" type="number" min="0" max="10" value="0" name="difficultyRating" value="{{ currentClass.name }}"/>
 
 
+      </label>
+      <label for="explanationRating" class="input-group">
+        <span>
+          Explanation (how clear is it explained)
+        </span>  
+        
+        <input list="rating" type="range" min="0" max="10" value="0" name="explanationRating" value="{{ currentClass.name }}"/>
+      </label>
+      <label for="personalUnderstanding">
+        <span>
+          Personal (how well do you understand it) 
+        </span>
+        <input list="rating" required type="range" min="0" max="10" value="0" name="personalUnderstanding" value="{{ currentClass.name }}"/>
+      </label>
+      <datalist id="rating">
 
-<code>{{user.name}}</code>
-
-
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+</datalist>
+    </form>
+    <nav>
+      <a rel="prev" href="/course{{ prevCourse }}">back</a>
+      <a rel="next" href="/course{{ nextCourse }}">next</a>
+      <button type='submit' id="next-form" value="{{nextCourse}}" rel="next" href="/course{{ nextCourse }}">next</button>
+    </nav>
+  </section>
 {% endblock %}

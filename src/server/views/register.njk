@@ -1,23 +1,31 @@
 {% extends  'base.njk' %}
 {% block  content %}
-<h1>register</h1>
-  <form action='/register' method="POST" enctype="multipart/form-data">
-  {% if error %}
-  {{error.message}}
-{% endif %}
-  <label for='name'>Name</label>
-    <input type='text' name='name' id='name'>
-    {{user.name}}
-    <label for='email'>Email</label>
-    {{user.email}} 
-    <input type='email' name='username' id='email'>
-    <label for='id'>Student ID nr </label>
-    {{user.id}}
-    <input type='number' name='id' id='id'>
-  <button type='submit'>Start Survey</button>
-  </form>
- {{ user.name }}
-  
-  
-{% endblock %}
-
+  <section class="form-container">
+    <h3>Let us know how you managed minor WebDev</h3>
+    <form action='/register' method="POST" enctype="multipart/form-data">
+      {% if error %}
+        {{ error.message }}
+      {% endif %}
+      <label class="input-group" for='name'>
+        <span>Name</span>
+        <input type='text' name='name' id='name' placeholder='Giovanni'>
+          {{ user.name }}
+        </label>
+        <label class="input-group" for='email'>
+          <span> Email {{ user.email }} </span>
+          <input type='email' name='username' id='email'>
+          
+          </label>
+          <label class="input-group" for='id'>
+            Student ID nr {{ user.id }}
+            <input type='number' name='id' id='id'></label>
+            <button type='submit'>Start Survey</button>
+          </form>
+          <div class='redirect'>
+            <p>Already started the survey?</p>
+            <a href='/login'>
+              <small>continue here</small>
+            </a>
+          </div>
+        </section>
+      {% endblock %}

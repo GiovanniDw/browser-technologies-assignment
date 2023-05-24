@@ -1,25 +1,24 @@
-import passport from 'passport';
-import passportLocal from 'passport-local';
-import User from '../models/User.js';
-import express from 'express';
-import jwt from 'passport-jwt';
+import passport from "passport";
+import passportLocal from "passport-local";
+import User from "../models/User.js";
+import express from "express";
+import jwt from "passport-jwt";
 const app = express();
 
 export const register = async (req, res, next) => {
   try {
-    
-      let data = {
-        layout: 'base.njk',
-      };
+    let data = {
+      layout: "base.njk",
+      title: "Welcome",
+    };
 
-      res.render('register.njk', data);
-    
+    res.render("register.njk", data);
   } catch (err) {
     let data = {
       error: { message: err },
-      layout: 'base.njk',
+      layout: "base.njk",
     };
-    res.render('register.njk', data);
+    res.render("register.njk", data);
     next();
   }
 };
@@ -51,22 +50,27 @@ export const register = async (req, res, next) => {
 // }
 
 export const doRegister = (req, res, next) => {
-	const {username, email, password, name, id} = req.body
+  const { username, email, password, name, id } = req.body;
   User.register(
-    new User({username: req.body.username, email: req.body.username, name: req.body.name, id: id,}),
+    new User({
+      username: req.body.username,
+      email: req.body.username,
+      name: req.body.name,
+      id: id,
+    }),
     username,
     function (err, user) {
       if (err) {
         res.json({
           success: false,
-          message: 'Your account could not be saved. Error: ' + err,
+          message: "Your account could not be saved. Error: " + err,
         });
       } else {
         req.login(user, (er) => {
           if (er) {
             res.json({ success: false, message: er });
           } else {
-            res.redirect('/course/start')
+            res.redirect("/course/start");
           }
         });
       }
@@ -112,25 +116,20 @@ export const doRegister = (req, res, next) => {
 // 	}
 
 export const login = async (req, res, next) => {
-  const {username, email, password, name, id} = req.body;
-
+  const { username, email, password, name, id } = req.body;
 
   try {
-
-
-
-     res.render('login.njk', {
-      layout: 'base.njk',
+    res.render("login.njk", {
+      layout: "base.njk",
     });
   } catch (err) {
-		let data = {
-      error: {message:err},
-      layout: 'base.njk',
+    let data = {
+      error: { message: err },
+      layout: "base.njk",
     };
-    res.render('login.njk', data);
+    res.render("login.njk", data);
     next();
   } finally {
-    
   }
 };
 
@@ -148,83 +147,73 @@ export const login = async (req, res, next) => {
 // })}
 
 export const doLogin = (req, res, next) => {
-	const {username, email, password, name, id} = req.body
-  User.findByUsername(
-    username,
-    username,
-    function (err, user) {
-      if (err) {
-        res.json({
-          success: false,
-          message: 'Can Not Login. Error: ' + err,
-        });
-      } else {
+  const { username, email, password, name, id } = req.body;
+  User.findByUsername(username, username, function (err, user) {
+    if (err) {
+      res.json({
+        success: false,
+        message: "Can Not Login. Error: " + err,
+      });
+    } else {
       req.login(user, (er) => {
-          if (er) {
-            res.json({ success: false, message: er });
-          } else {
-            res.redirect('/course/start')
-            next()
-          }
-        });
-      }
+        if (er) {
+          res.json({ success: false, message: er });
+        } else {
+          res.redirect("/course/css-to-the-rescue");
+          next();
+        }
+      });
     }
-  );
+  });
 };
 
-
 export const doLoginOLD = (req, res, next) => {
-	const { password, username } = req.body;
-	
- 	// try {
-	// 	const findThisUser = User.findByUsername(username)
-	// 	return User.authenticate('local', findThisUser)
-	// } catch (err) {
-	// 	next(err)
-	// }
+  const { password, username } = req.body;
 
+  // try {
+  // 	const findThisUser = User.findByUsername(username)
+  // 	return User.authenticate('local', findThisUser)
+  // } catch (err) {
+  // 	next(err)
+  // }
 
-
-	
   if (!req.body.username) {
-    res.json({ success: false, message: 'Username was not given' });
+    res.json({ success: false, message: "Username was not given" });
   } else if (!req.body.password) {
-    res.json({ success: false, message: 'Password was not given' });
+    res.json({ success: false, message: "Password was not given" });
   } else {
-		console.log(req.body)
-  passport.authenticate('local', function (err, user, info, status) {
-
-		console.log(user)
+    console.log(req.body);
+    passport.authenticate("local", function (err, user, info, status) {
+      console.log(user);
       if (err) {
-				res.json({ success: false, message: 'unknown error' });
-				next(err)
+        res.json({ success: false, message: "unknown error" });
+        next(err);
       } else {
         if (!user) {
           res.json({
             success: false,
-            message: 'username or password incorrect',
+            message: "username or password incorrect",
           });
         } else {
-					const signInUser = User.findByUsername(user.username, user.password)
-					console.log(signInUser)
-					req.logIn(user, (er) => {
-						if (er) {
-							res.json({ success: false, message: er });
-						} else {
-							console.log('user login')
-							console.log(user)
-
-						}
-					});
-					// req.login(user, (er) => {
-					// 	if (er) {
-					// 		res.json({ success: false, message: er });
-					// 	} else {
-					// 		res.json({ success: true, message: 'Your account has been saved' });
-					// 	}
-					// });
-					console.log(user)
-          res.redirect('/classes')
+          const signInUser = User.findByUsername(user.username, user.password);
+          console.log(signInUser);
+          req.logIn(user, (er) => {
+            if (er) {
+              res.json({ success: false, message: er });
+            } else {
+              console.log("user login");
+              console.log(user);
+            }
+          });
+          // req.login(user, (er) => {
+          // 	if (er) {
+          // 		res.json({ success: false, message: er });
+          // 	} else {
+          // 		res.json({ success: true, message: 'Your account has been saved' });
+          // 	}
+          // });
+          console.log(user);
+          res.redirect("/classes");
         }
       }
     })(req, res, next);
@@ -232,13 +221,11 @@ export const doLoginOLD = (req, res, next) => {
 };
 
 export const logout = (req, res, next) => {
-	req.logOut()
-  
   req.logout((err) => {
     if (err) {
       return next(err);
     }
-    res.redirect('/login');
+    res.redirect("/login");
   });
 };
 

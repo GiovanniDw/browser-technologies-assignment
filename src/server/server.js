@@ -1,24 +1,23 @@
-import express from 'express';
-import ViteExpress from 'vite-express';
-import { createServer as createViteServer } from 'vite';
-import bodyParser from 'body-parser';
-import nunjucks from 'nunjucks';
-import expressNunjucks from 'express-nunjucks';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import logger from 'morgan';
-import flash from 'connect-flash';
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
-import fs from 'node:fs';
-import multer from 'multer';
-import routes from './routes/index.js';
+import express from "express";
+import ViteExpress from "vite-express";
+import { createServer as createViteServer } from "vite";
+import bodyParser from "body-parser";
+import nunjucks from "nunjucks";
+import expressNunjucks from "express-nunjucks";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import logger from "morgan";
+import flash from "connect-flash";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import fs from "node:fs";
+import multer from "multer";
+import routes from "./routes/index.js";
 // import mongoose from 'mongoose';
-import mongoose from './config/middleware/mongoose.js';
-import passport from './config/passport.js';
-import cors from 'cors';
-import compression from 'compression';
-
+import mongoose from "./config/middleware/mongoose.js";
+import passport from "./config/passport.js";
+import cors from "cors";
+import compression from "compression";
 
 dotenv.config();
 
@@ -26,7 +25,6 @@ dotenv.config();
 
 const upload = multer();
 const PORT = process.env.PORT || 3000;
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,44 +42,38 @@ const __dirname = path.dirname(__filename);
 
 // ]
 
-
 const app = express();
 
-
 const CorsOptions = {
-  origin: 'http://localhost:5173',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: '*',
-  exposedHeaders: '*',
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "*",
+  exposedHeaders: "*",
   credentials: true,
   // optionsSuccessStatus: 204 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
-
-app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
+app.set("trust proxy", ["loopback", "linklocal", "uniquelocal"]);
 app.use(cors(CorsOptions));
-app.options('*', cors(CorsOptions));
-app.use(logger('dev'));
+app.options("*", cors(CorsOptions));
+app.use(logger("dev"));
 app.use(compression());
-app.use('/', express.static(path.join(__dirname, 'static')));
-app.use('/', express.static(path.join(__dirname, '../assets')));
-app.use('/', express.static(path.join(__dirname, '../../public')));
+app.use("/", express.static(path.join(__dirname, "static")));
+app.use("/", express.static(path.join(__dirname, "../assets")));
+app.use("/", express.static(path.join(__dirname, "../../public")));
 app.use(bodyParser.json());
 
 app.use(
   bodyParser.urlencoded({
     extended: true,
-    credentials: true
+    credentials: true,
   })
 );
 
 // app.use(flash());
 
-
-
-app.set('view engine', 'njk');
-app.set('views', path.join(__dirname, 'views'));
-
+app.set("view engine", "njk");
+app.set("views", path.join(__dirname, "views"));
 
 const njk = expressNunjucks(app, {
   loader: nunjucks.FileSystemLoader,
@@ -129,7 +121,7 @@ app.use(routes);
 // } )
 // app.post('/set', setUser)
 
-app.get('*', function (req, res, next) {
+app.get("*", function (req, res, next) {
   let err = new Error(`${req.ip} tried to reach ${req.originalUrl}`); // Tells us which IP tried to reach a particular URL
   err.statusCode = 404;
   err.shouldRedirect = true; //New property on err so that our middleware will redirect
@@ -138,20 +130,19 @@ app.get('*', function (req, res, next) {
 
 app.use((req, res, next) => {
   // Make `user` and `authenticated` available in templates
-  res.locals.user = req.user
-  res.locals.authenticated = !req.user.anonymous
+  res.locals.user = req.user;
+  res.locals.authenticated = !req.user.anonymous;
   next();
 });
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.render('error.njk', {
-    layout: 'base.njk',
+  res.render("error.njk", {
+    layout: "base.njk",
     message: err.message,
     error: err.status,
   });
 });
-
 
 // app.get('/step1', indexRouter);
 // router.get('/', async  function(req, res, next) {
@@ -164,7 +155,6 @@ app.use((err, req, res, next) => {
 //   res.render('index.njk', data)
 // })
 
-
 // const startServer = async () => {
 //   try {
 //     await mongoose.connect(process.env.MONGO_DB, {
@@ -173,7 +163,7 @@ app.use((err, req, res, next) => {
 //       useUnifiedTopology: true,
 //     });
 //     console.log('MongoDB connected');
-    
+
 //     ViteExpress.listen(app, PORT, () => {
 //       console.log(`Server is listening on port ${PORT}...`);
 //     });
@@ -186,18 +176,16 @@ app.use((err, req, res, next) => {
 
 // startServer();
 
-
-
 mongoose()
   .then(() => {
-    console.log('mongo connected');
+    console.log("mongo connected");
     ViteExpress.listen(app, PORT, () => {
       console.log(`Server is listening on port ${PORT}...`);
-    })
-  }).catch((err) => {
+    });
+  })
+  .catch((err) => {
     // an error occurred connecting to mongo!
     // log the error and exit
-    console.error('Unable to connect to mongo.');
+    console.error("Unable to connect to mongo.");
     console.error(err);
   });
-

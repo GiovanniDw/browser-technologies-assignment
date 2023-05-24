@@ -1,9 +1,7 @@
-import mongoose, { SchemaTypes } from 'mongoose';
+import mongoose, { SchemaTypes } from "mongoose";
 const Schema = mongoose.Schema;
-import passportLocalMongoose from 'passport-local-mongoose';
-import mongooseAutoPopulate from 'mongoose-autopopulate';
-import bcrypt from 'bcrypt';
-
+import passportLocalMongoose from "passport-local-mongoose";
+import mongooseAutoPopulate from "mongoose-autopopulate";
 
 const WORK_FACTOR = 10;
 
@@ -14,39 +12,36 @@ const ClassSchema = new Schema({
   },
   teachers: {
     type: Array,
-    default: [""]
+    default: [""],
   },
   dateStart: {
     type: Date,
-    default: '2023-04-06'
+    default: "2023-04-06",
   },
   dateEnd: {
     type: Date,
-    default: '2023-04-30'
+    default: "2023-04-30",
   },
   weeks: Number,
   classRating: {
     type: Number,
-    default: 5
+    default: 5,
   },
   difficultyRating: {
     type: Number,
-    default: 5
+    default: 5,
   },
   explanationRating: {
     type: Number,
-    default: 5
+    default: 5,
   },
   personalUnderstanding: {
     type: Number,
-    default: 5
+    default: 5,
   },
 });
 
-
 // ClassSchema.plugin(mongooseAutoPopulate);
-
-
 
 const UserSchema = new Schema({
   id: Number,
@@ -57,7 +52,7 @@ const UserSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: String,
   classes: [
@@ -72,13 +67,11 @@ const UserSchema = new Schema({
 // UserSchema.plugin(mongooseAutoPopulate);
 UserSchema.plugin(passportLocalMongoose);
 
-
 // UserSchema.pre('save', async function (next) {
 //   const salt = await bcrypt.genSalt();
 //   this.password = await bcrypt.hash(this.password, salt);
 //   next();
 // });
-
 
 // UserSchema.statics.login = async function (username, password) {
 //   console.log('loginschema');
@@ -99,8 +92,6 @@ UserSchema.plugin(passportLocalMongoose);
 //     throw Error('Incorrect email');
 //   }
 // };
-
-
 
 // UserSchema.pre('save', function (next) {
 // 	const user = this;
@@ -133,8 +124,6 @@ UserSchema.plugin(passportLocalMongoose);
 // 	});
 // };
 
-const User = mongoose.model('User', UserSchema);
-export const Class = mongoose.model('Class', ClassSchema);
+const User = mongoose.model("User", UserSchema);
+export const Class = mongoose.model("Class", ClassSchema);
 export default User;
-
-

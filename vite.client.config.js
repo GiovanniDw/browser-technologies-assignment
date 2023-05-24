@@ -28,7 +28,13 @@ export default defineConfig({
     outDir: 'docs',
     sourcemap: true,
     manifest: true,
-    minify: false
+    minify: false,
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        nested: resolve(__dirname, 'nested/index.html'),
+      },
+    },
   }
 },({ command, mode }) => {
   // Load env file based on `mode` in the current working directory.

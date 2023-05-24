@@ -1,4 +1,4 @@
-import User, { Class } from '../models/User.js';
+import User, { Class } from "../models/User.js";
 
 export const saveClasses = (username, classes) => {
   return new Promise(async (resolve, reject) => {
@@ -22,7 +22,7 @@ export const saveClasses = (username, classes) => {
       // 	name: name,
       // });
       await user.save();
-      resolve('user');
+      resolve("user");
     } catch (err) {
       reject(err);
     }
@@ -45,7 +45,7 @@ export const addClass = (userID, ClassName) => {
         user.classes.push(classItem);
         await user.save();
       }
-      resolve('has resolved');
+      resolve("has resolved");
     } catch (err) {
       reject(err);
     }
@@ -53,10 +53,16 @@ export const addClass = (userID, ClassName) => {
 };
 
 export const updateClass = (userID, classID, classInfo) => {
-	
   return new Promise(async (resolve, reject) => {
     try {
-			let { dateStart, dateEnd, classRating, difficultyRating, explanationRating, personalUnderstanding} = classInfo
+      let {
+        dateStart,
+        dateEnd,
+        classRating,
+        difficultyRating,
+        explanationRating,
+        personalUnderstanding,
+      } = classInfo;
       const user = await User.findById(userID);
       const currentClass = await user.classes.findOneAndUpdate(classID);
       currentClass.set({
@@ -67,8 +73,8 @@ export const updateClass = (userID, classID, classInfo) => {
         explanationRating: explanationRating,
         personalUnderstanding: personalUnderstanding,
       });
-			user.save()
-      resolve('has resolved');
+      user.save();
+      resolve("has resolved");
     } catch (err) {
       reject(err);
     }
@@ -79,12 +85,12 @@ export const myClasses = (userID) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(userID)
-        .select('classes')
-        .populate('classes');
+        .select("classes")
+        .populate("classes");
       resolve(user.classes);
     } catch (err) {
       reject({
-        type: 'error',
+        type: "error",
       });
     }
   });
@@ -102,7 +108,7 @@ export const getFirstClass = (userID) => {
       resolve(firstClass);
     } catch (err) {
       reject({
-        type: 'error',
+        type: "error",
       });
     }
   });
