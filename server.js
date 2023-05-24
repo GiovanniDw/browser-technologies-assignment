@@ -517,9 +517,14 @@ app.use((err, req, res, next) => {
 });
 mongoose().then(() => {
   console.log("mongo connected");
-  ViteExpress.listen(app, PORT, () => {
-    console.log(`Server is listening on port ${PORT}...`);
-  });
+
+app.listen(PORT, () => {
+  console.log(__dirname);
+  console.log("Server is listening on port 3000...");
+});
+  // ViteExpress.listen(app, PORT, () => {
+  //   console.log(`Server is listening on port ${PORT}...`);
+  // });
 }).catch((err) => {
   console.error("Unable to connect to mongo.");
   console.error(err);
