@@ -2,11 +2,13 @@
 {% block  content %}
   <section class="form-container">
     <h3>Continue the Survey?</h3>
-    {% if error %}
-      {{ error }}
-    {% endif %}
-    {{ user }}
     <form action='/login' method="POST" enctype="multipart/form-data">
+      {% if error %}
+        error{{ error }}
+      {% endif %}
+  {% if message %}
+        message {{ message }}
+      {% endif %}
       <label class="input-group" for='email'>
         School Email
         <input

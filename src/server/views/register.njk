@@ -4,8 +4,12 @@
     <h3>Let us know how you managed minor WebDev</h3>
     <form action='/register' method="POST" enctype="multipart/form-data">
       {% if error %}
-        {{ error.message }}
+        {{ error }}
       {% endif %}
+  {% if message %}
+        {{ message }}
+      {% endif %}
+
       <label class="input-group" for='name'>
         <span>Name</span>
         <input type='text' name='name' id='name' placeholder='Your Name'>

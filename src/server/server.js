@@ -104,7 +104,7 @@ passport(app);
 
 // app.set('view engine', 'njk');
 
-app.use('/', routes);
+app.use(routes);
 // app.post('/set', upload.array(), (req, res,next) => {
 //   const userInfo = req.body;
 

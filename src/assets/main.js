@@ -5,7 +5,7 @@
 const $ = (e) => document.querySelector(e);
 const $$ = (e) => document.querySelectorAll(e);
 
-// import { courseData } from "./server/helpers/courseData.js";
+
 
 let pathArray = window.location.pathname.split('/');
 let currentSlug = pathArray[2].toString();

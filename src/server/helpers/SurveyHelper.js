@@ -12,8 +12,8 @@ export const saveClasses = (username, classes) => {
       // 	about: about
       // });
 
-      classes.forEach((element) => {
-        user.classes.set({
+      await classes.forEach((element) => {
+       user.classes.set({
           name: element,
         });
       });
@@ -30,6 +30,7 @@ export const saveClasses = (username, classes) => {
 };
 
 export const addClass = (userID, ClassName) => {
+  console.log(userID)
   return new Promise(async (resolve, reject) => {
     try {
       let classItem = {
@@ -100,7 +101,6 @@ export const getFirstClass = (userID) => {
   return new Promise(async (resolve, reject) => {
     try {
       const user = await User.findById(userID);
-
       if (user) {
         const firstClass = user.classes[0];
         return firstClass;

@@ -11,6 +11,7 @@
     {# <p>{{{session}}}</p> #}
     <form id="{{currentCourse.slug}}" action="/course/survey/{{ currentCourse.slug }}" method="POST" enctype="multipart/form-data">
       <ul class="form-steps">
+        <li><a href=/course/start>{{ class.id }}</a></li>
         {% for class in classes %}
           {% if class.name == currentClass.name %}
             <li class='active'>{{ class.id }}</li>
