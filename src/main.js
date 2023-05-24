@@ -1,6 +1,6 @@
-import "./assets/base.css";
-import "./assets/main.css";
-import "./assets/form.css";
+// import "./assets/base.css";
+// import "./assets/main.css";
+// import "./assets/form.css";
 
 const $ = (e) => document.querySelector(e);
 const $$ = (e) => document.querySelectorAll(e);
@@ -51,14 +51,12 @@ const getFormData = () => {
   return data;
 };
 
-nextButton.onclick = event => {
+form.onclick = event => {
   event.preventDefault();
   let data = getFormData();
   localStorage.setItem(formIdentifier, JSON.stringify(data[formIdentifier]));
   const message = "Form draft has been saved!";
   console.log(message);
-
-  console.log(this.href)
 };
 
 const populateForm = () => {
