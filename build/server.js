@@ -539,9 +539,8 @@ app.use(cors(CorsOptions));
 app.options("*", cors(CorsOptions));
 app.use(logger("dev"));
 app.use(compression());
-app.use("/", express.static(path.join(__dirname, "static")));
-app.use("/", express.static(path.join(__dirname, "../assets")));
-app.use("/", express.static(path.join(__dirname, "../../public")));
+app.use("/", express.static(path.join(__dirname, "./static")));
+app.use("/", express.static(path.join(__dirname, "./public")));
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -550,7 +549,7 @@ app.use(
   })
 );
 app.set("view engine", "njk");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "./views"));
 expressNunjucks(app, {
   loader: nunjucks.FileSystemLoader
 });
