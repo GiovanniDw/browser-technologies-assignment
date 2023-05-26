@@ -577,7 +577,7 @@ app.use((err, req, res, next) => {
 });
 mongoose().then(() => {
   console.log("mongo connected");
-  ViteExpress.listen(app, PORT, () => {
+  app.listen(app, PORT, () => {
     console.log(`Server is listening on port ${PORT}...`);
   });
 }).catch((err) => {
