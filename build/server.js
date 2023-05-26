@@ -23,10 +23,8 @@ import session from "express-session";
 import "cookie-session";
 import cors from "cors";
 import compression from "compression";
-dotenv.config();
 const Schema = mongoose$1.Schema;
 const ClassSchema = new Schema({
-  _id: Number,
   name: {
     type: String
   },
@@ -72,17 +70,13 @@ const UserSchema = new Schema({
     unique: true
   },
   password: String,
-  classes: [
-    {
-      type: ClassSchema
-    }
-  ],
+  classes: [ClassSchema],
   admin: Boolean,
   currentClass: String
 });
 UserSchema.plugin(passportLocalMongoose);
 const User = mongoose$1.model("User", UserSchema);
-const Class = mongoose$1.model("Class", ClassSchema);
+mongoose$1.model("Class", ClassSchema);
 express();
 const register = async (req, res, next) => {
   try {
@@ -100,70 +94,88 @@ const register = async (req, res, next) => {
     next();
   }
 };
-const doRegister = (req, res, next) => {
+const doRegister = async (req, res, next) => {
   const { username, email, password, name, id } = req.body;
-  User.register(
-    new User({
-      username: req.body.username,
-      email: req.body.username,
-      name: req.body.name,
-      id
-    }),
-    username,
-    function(err, user) {
-      if (err) {
-        res.json({
-          success: false,
-          message: "Your account could not be saved. Error: " + err
-        });
-      } else {
-        req.login(user, (er) => {
-          if (er) {
-            res.json({ success: false, message: er });
-          } else {
-            res.redirect("/course/start");
-          }
-        });
-      }
-    }
-  );
-  next();
-};
-const login = async (req, res, next) => {
-  req.body;
+  let data = {
+    layout: "base.njk",
+    title: "Welcome",
+    error: null,
+    message: "",
+    succes: ""
+  };
   try {
-    res.render("login.njk", {
-      layout: "base.njk"
-    });
-  } catch (err) {
-    let data = {
-      error: { message: err },
-      layout: "base.njk"
-    };
-    res.render("login.njk", data);
-    next();
-  } finally {
+    await User.register(
+      new User({
+        username: req.body.username,
+        email: req.body.username,
+        name: req.body.name,
+        id
+      }),
+      username,
+      function(err, user) {
+        if (err) {
+          data.succes = false;
+          data.message = err;
+          res.render("register.njk", data);
+        } else {
+          req.login(user, (er) => {
+            if (er) {
+              data.succes = false;
+              data.message = er;
+              res.render("register.njk", data);
+            } else {
+              res.redirect("/course/start");
+            }
+          });
+        }
+      }
+    );
+  } catch (error) {
+    next(error);
   }
 };
-const doLogin = (req, res, next) => {
+const doLogin = async (req, res, next) => {
   const { username, email, password, name, id } = req.body;
-  User.findByUsername(username, username, function(err, user) {
-    if (err) {
-      res.json({
-        success: false,
-        message: "Can Not Login. Error: " + err
-      });
-    } else {
-      req.login(user, (er) => {
-        if (er) {
-          res.json({ success: false, message: er });
+  console.log("req.login");
+  console.log(req.login);
+  let data = {
+    layout: "base.njk",
+    title: "Welcome",
+    error: null,
+    message: "",
+    error: ""
+  };
+  try {
+    if (req.body.username) {
+      console.log(username);
+      await User.findByUsername(username, username, function(err, user) {
+        if (err) {
+          console.log(err);
+          data.succes = false;
+          data.error = err;
+          res.render("login.njk", data);
         } else {
-          res.redirect("/course/css-to-the-rescue");
-          next();
+          req.login(user, (er) => {
+            if (er) {
+              console.log(er);
+              data.succes = false;
+              data.error = "Email not found";
+              res.render("login.njk", data);
+            } else {
+              console.log("req.login");
+              console.log(req.login);
+              res.redirect("/course/start");
+            }
+          });
         }
       });
+    } else {
+      res.render("login.njk", data);
     }
-  });
+  } catch (error) {
+    res.render("login.njk", data);
+    next(error);
+  }
 };
 const logout = (req, res, next) => {
   req.logout((err) => {
@@ -173,19 +185,8 @@ const logout = (req, res, next) => {
     res.redirect("/login");
   });
 };
-multer();
-const router$3 = express.Router();
-const upload$1 = multer();
-const router$2 = express.Router();
-router$2.get("/", register);
-router$2.post("/", upload$1.array(), doRegister);
-router$2.get("/login", login);
-router$2.post("/login", upload$1.array(), doLogin);
-router$2.get("/register", register);
-router$2.post("/register", upload$1.array(), doRegister);
-router$2.get("/logout", logout);
-router$2.post("/logout", logout);
 const addClass = (userID, ClassName) => {
+  console.log(userID);
   return new Promise(async (resolve, reject) => {
     try {
       let classItem = {
@@ -197,9 +198,45 @@ const addClass = (userID, ClassName) => {
       );
       console.log(ClassName);
       if (!checkDup) {
-        user.classes.push(classItem);
+        user.classes.create(classItem);
         await user.save();
       }
+      resolve("has resolved");
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+const updateClass = (userID, classID, classInfo) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let {
+        teachers,
+        dateStart,
+        dateEnd,
+        classRating,
+        difficultyRating,
+        explanationRating,
+        personalUnderstanding
+      } = classInfo;
+      console.log(classInfo);
+      const user = await User.findById(userID);
+      const classes = user.classes;
+      const currentClass = classes.id(classID);
+      console.log("classes");
+      console.log(classes);
+      console.log("classID");
+      console.log(classID);
+      currentClass.set({
+        dateStart,
+        dateEnd,
+        classRating,
+        difficultyRating,
+        explanationRating,
+        personalUnderstanding,
+        teachers
+      });
+      await user.save();
       resolve("has resolved");
     } catch (err) {
       reject(err);
@@ -213,14 +250,14 @@ const courseData = [
     slug: "css-to-the-rescue",
     url: "/css-to-the-rescue",
     teachers: ["Sanne", "Vasilis"],
-    dateStart: "06-02-2023",
-    dateEnd: "06-03-2023",
+    dateStart: "2023-02-06",
+    dateEnd: "2023-03-06",
     weeks: 4,
     classRating: Number,
     difficultyRating: Number,
     explanationRating: Number,
     personalUnderstanding: String,
-    prevCourse: null,
+    prevCourse: "/start",
     nextCourse: "/web-app-from-scratch"
   },
   {
@@ -229,24 +266,24 @@ const courseData = [
     slug: "web-app-from-scratch",
     url: "/web-app-from-scratch",
     teachers: ["Robert", "Joost"],
-    dateStart: "06-02-2023",
-    dateEnd: "06-03-2023",
+    dateStart: "2023-02-06",
+    dateEnd: "2023-03-06",
     weeks: 4,
     classRating: Number,
     difficultyRating: Number,
     explanationRating: Number,
     personalUnderstanding: String,
     prevCourse: "/css-to-the-rescue",
-    nextCourse: "/progressive-web-app"
+    nextCourse: "/progressive-web-apps"
   },
   {
     id: 3,
     name: "Progressive Web App",
-    slug: "progressive-web-app",
-    url: "/progressive-web-app",
+    slug: "progressive-web-apps",
+    url: "/progressive-web-apps",
     teachers: ["Janno", "Declan"],
-    dateStart: "20-03-2023",
-    dateEnd: "03-03-2023",
+    dateStart: "2023-03-20",
+    dateEnd: "2023-04-02",
     weeks: 3,
     classRating: Number,
     difficultyRating: Number,
@@ -261,112 +298,138 @@ const courseData = [
     slug: "browser-technologies",
     url: "/browser-technologies",
     teachers: ["Vasillis", "Peter-Paul"],
-    dateStart: "20-03-2023",
-    dateEnd: "03-03-2023",
+    dateStart: "2023-03-20",
+    dateEnd: "2023-04-02",
     weeks: 3,
     classRating: Number,
     difficultyRating: Number,
     explanationRating: Number,
     personalUnderstanding: String,
-    prevCourse: "/progressive-web-app",
+    prevCourse: "/progressive-web-apps",
     nextCourse: "/end"
   }
 ];
-const classes = [
-  "css-to-the-rescue",
-  "web-app-from-scratch",
-  "browser-technologies",
-  "progressive-web-apps"
-];
-const start = async (req, res, next) => {
+console.log(courseData);
+const start = (req, res, next) => {
+  if (!req.user)
+    return res.redirect("/login");
+  console.log("req.user");
+  console.log(req.user);
+  let data = {
+    message: "Hello world!",
+    layout: "base.njk",
+    title: "Start Survey",
+    userClasses: req.user.classes,
+    classes: courseData,
+    error: null
+  };
   try {
     console.log(req.body);
-    let data = {
-      message: "Hello world!",
-      layout: "base.njk",
-      title: "Nunjucks example",
-      user: req.user,
-      userClasses: req.user.classes,
-      classes
-    };
     console.log("requser");
     console.log(req.user);
+    data.user = req.user;
     res.render("survey-start.njk", data);
   } catch (err) {
+    data.error = err;
     next(err);
   }
 };
-const saveClasses = async (req, res, next) => {
+const saveClasses = (req, res, next) => {
+  ({
+    message: "Hello world!",
+    layout: "base.njk",
+    title: "Nunjucks example",
+    user: req.user,
+    userClasses: null,
+    classes: courseData,
+    error: null
+  });
+  if (!req.user)
+    return res.redirect("/login");
+  const userID = req.user._id;
   try {
     const { user } = req.user;
-    const userID = user._id;
+    console.log(req.user);
     const selectedClasses = req.body.classes;
+    console.log("selectedClasses");
     console.log(selectedClasses);
-    const thisUser = await User.findById(userID);
-    await selectedClasses.forEach(async (element) => {
-      console.log(element);
-      console.log("1");
-      console.log(thisUser);
-      let alreadyExists = await thisUser.classes.some(
-        (item) => item.name == element
-      );
-      try {
-        console.log("alreadyExists");
-        console.log(alreadyExists);
-        if (alreadyExists) {
-          console.log(`${element} already in user classes`);
-          next();
-        } else {
+    if (req.user.classes) {
+      Promise.all(selectedClasses.map(async (element) => {
+        console.log("element");
+        console.log(element);
+        console.log("1");
+        let alreadyExists = req.user.classes.some(
+          (item) => item.name == element
+        );
+        if (!alreadyExists) {
           await addClass(userID, element);
           console.log("classes saved");
+        } else {
+          console.log(`${element} already in user classes`);
         }
-        console.log("2");
-        console.log(thisUser);
-        res.redirect("/course/css-to-the-rescue");
-        next();
-      } catch (err) {
-        next(err);
-      }
-    });
-    console.log("3");
-    console.log(thisUser);
-    if (thisUser.classes[0].name !== void 0) {
-      await res.redirect(`/course/${thisUser.classes[0].name}`);
+      }));
     } else {
-      res.redirect("back");
+      return res.redirect("/course/css-to-the-rescue");
     }
-    res.send("ok");
+    console.log("3");
+    return res.redirect("/course/css-to-the-rescue");
   } catch (err) {
     next(err);
   }
 };
 const postSurveyClass = async (req, res, next) => {
+  if (!req.user)
+    return res.redirect("/login");
+  console.log("req.user");
+  console.log(req.user);
   try {
-    console.log(req.body);
+    const courseToSave = req.params.id;
+    const className = req.params.id;
+    const nextPage2 = req.body.nextClass;
+    const {
+      dateStart,
+      dateEnd,
+      classRating,
+      difficultyRating,
+      explanationRating,
+      personalUnderstanding,
+      teachers
+    } = req.body;
     const userID = req.user._id;
-    const classID = req.params.name;
     const thisUser = await User.findById(userID);
-    const thisClass = await Class.findById(classID);
-    const { classInfo } = req.body;
-    console.log(classInfo);
-    const { classes: classes2 } = req.user;
+    const { classes } = thisUser;
+    if (classes.some((obj2) => obj2.name == className)) {
+      const classItem = obj;
+      let classID = classItem._id;
+      const classInfo = {
+        dateStart,
+        dateEnd,
+        classRating,
+        difficultyRating,
+        explanationRating,
+        personalUnderstanding,
+        teachers
+      };
+      await updateClass(userID, classID, classInfo);
+    }
+    next();
   } catch (err) {
     console.log(err);
     next(err);
+    return res.redirect(nextPage);
   }
 };
-const getObjBySlug = (objArray, slug) => objArray.find((obj) => obj.url === slug);
+const getObjBySlug = (objArray, slug) => {
+  return objArray.find((obj2) => obj2.slug === slug);
+};
 const courseElement = async (req, res, next) => {
-  console.log(req);
+  if (!req.user)
+    return res.redirect("/login");
   const user = req.user;
-  console.log("req.params");
-  console.log(req.params);
-  const page = req.route.path;
-  const currentCourse = getObjBySlug(courseData, page);
-  console.log("currentCourse");
-  console.log(currentCourse);
-  console.log("page");
-  console.log(page);
+  req.route.path;
+  let pathArray = req.route.path.split("/");
+  let currentSlug = pathArray[2].toString();
+  const currentCourse = await getObjBySlug(courseData, currentSlug);
   try {
     let data = {
       user,
@@ -382,33 +445,39 @@ const courseElement = async (req, res, next) => {
     };
     res.render("survey-class.njk", data);
   } catch (error) {
+    console.log("courseElement error");
     console.log(error);
+    next(error);
   }
 };
 const upload = multer();
-const router$1 = express.Router();
-router$1.get("", (req, res, next) => {
-  res.redirect("/login");
+const router = express.Router();
+router.get("/", doRegister);
+router.post("/", upload.array(), doRegister);
+router.get("/login", doLogin);
+router.post("/login", upload.array(), doLogin);
+router.get("/register", register);
+router.post("/register", upload.array(), doRegister);
+router.get("/logout", logout);
+router.post("/logout", logout);
+router.get("/course", (req, res, next) => {
+  if (!req.user)
+    return res.redirect("/login");
 });
-router$1.get("/start", start);
-router$1.post("/start", upload.array(), saveClasses);
-courseData.forEach((course) => {
-  console.log("Name: " + course.name + ", Route: " + course.slug);
-  router$1.get(`/${course.slug}`, courseElement);
-});
-router$1.get("/end", (req, res, next) => {
+router.get("/course/start", start);
+router.post("/course/start", upload.array(), saveClasses);
+router.get("/course/end", (req, res, next) => {
   let data = {
     user: req.user,
     classes: courseData
   };
   res.render("survey-end.njk", data);
 });
-router$1.post("/course/:id", upload.none(), postSurveyClass);
-multer();
-const router = express.Router();
-router.get("/", router$3);
-router.use("/", router$2);
-router.use("/course", router$1);
+courseData.forEach((course) => {
+  console.log("Name: " + course.name + ", Route: " + course.slug);
+  router.get(`/course/${course.slug}`, courseElement);
+  router.post(`/course/${course.slug}`, upload.none(), postSurveyClass);
+});
 const mongoose = () => {
   mongoose$1.Promise = global.Promise;
   return mongoose$1.connect(process.env.MONGO_DB, {
@@ -451,7 +520,7 @@ function passport(app2) {
   app2.use(passport$1.initialize());
   app2.use(passport$1.session());
 }
-
+dotenv.config();
 multer();
 const PORT = process.env.PORT || 3e3;
 const __filename = fileURLToPath(import.meta.url);
@@ -486,7 +555,7 @@ expressNunjucks(app, {
   loader: nunjucks.FileSystemLoader
 });
 passport(app);
-app.use("/", router);
+app.use(router);
 app.get("*", function(req, res, next) {
   let err = new Error(`${req.ip} tried to reach ${req.originalUrl}`);
   err.statusCode = 404;
@@ -508,7 +577,7 @@ app.use((err, req, res, next) => {
 });
 mongoose().then(() => {
   console.log("mongo connected");
-  app.listen(PORT,"0.0.0.0", () => {
+  ViteExpress.listen(app, PORT, () => {
     console.log(`Server is listening on port ${PORT}...`);
   });
 }).catch((err) => {

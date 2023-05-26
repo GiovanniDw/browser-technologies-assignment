@@ -1,0 +1,13 @@
+{% extends  'base.njk' %}
+{% block  content %}
+
+  <p>error page</p>
+
+  <h1>{{error}}</h1>
+  <p>{{message}}</p>
+  <p>{{error.message}}</p>
+  <p>{{error.status}}</p>
+    <p>{{user.username}}</p>
+
+{% endblock %}
+

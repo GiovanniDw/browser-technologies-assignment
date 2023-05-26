@@ -1,0 +1,20 @@
+{% extends  'base.njk' %}
+{% block  content %}
+
+  <h1>{{message}}</h1>
+    {% if error.message %}
+  {{error.message}}
+  {% endif %}
+  <form action='/login' method="post" enctype="multipart/form-data">
+    <input type='text' name='name' >
+    <input type='email' name='email' id='email'>
+    <input type='number' name='id' id='id'>
+  <input value='submit' type='submit'>
+  </form>
+
+  <p>
+  {{user.username}}
+  </p>
+  
+{% endblock %}
+

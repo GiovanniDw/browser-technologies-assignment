@@ -19,7 +19,7 @@ export default defineConfig({
   appType: 'custom',
   base: "./",
   plugins: [commonjs(),],
-  optimizeDeps: {exclude: ["fsevents"]},
+  optimizeDeps: {},
   publicDir: './public',
   css: {
     devSourcemap: true
@@ -44,11 +44,10 @@ export default defineConfig({
     sourcemap: true,
     manifest: true,
     ssrManifest: true,
-    ssr: './src/server/server.js',
     minify: false,
     rollupOptions: {
       // overwrite default .html entry
-      input: './src/main.js',
+      input: './src/assets/main.js',
     },
   }
 },({ command, mode }) => {

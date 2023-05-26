@@ -1,0 +1,54 @@
+{% extends  'base.njk' %}
+{% block  content %}
+<section class="form-container">
+    <h1>Welcome</h1>
+    <p>{{ user.name }} <span>{{ user.id }}</span></p>
+    {# <p>{{{session}}}</p> #}
+    <form action="/course/start" method="POST" enctype="multipart/form-data">
+    <ul class="form-steps">
+        <li><a class="active" href=/course/start>0</a></li>
+        {% for class in classes %}
+          {% if class.name == currentClass.name %}
+            <li>{{ class.id }}</li>
+          {% elif class.id > currentClass.id %}
+      <li><a disabled href=/course/{{class.slug}}>{{ class.id }}</a></li>
+          {% else %}
+            <li><a href=/course/{{class.slug}}>{{ class.id }}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <h2>Choose the classes u followed in 2023</h2>
+      {% for class in classes %}
+        {% set checked = false %}
+        {% for obj in user.classes %}
+          {% if obj.name == class.slug %}
+            {% set checked = true %}
+          {% endif %}
+        {% endfor %}
+        {% if checked %}
+          <div>
+              <label for='{{ class.slug }}'>
+                <input type="checkbox" name="classes" value="{{ class.slug }}" id="{{class.slug}}" checked>
+                {{ class.name }}
+              </label>
+            </div>
+          {% else %}
+            <div>
+              
+                <label for='{{ class.slug }}'>
+                  <input type="checkbox" name="classes" value="{{ class.slug }}" id="{{class.slug}}">
+                  {{ class.name }}
+      
+                </label>
+              </div>
+            {% endif %}
+          {% endfor %}
+          <nav>
+          <button type="submit">Save Selection</button>
+          {% if user.classes[0] %}
+          <a href="/course/css-to-the-rescue">Next</a>  
+          {% endif %}
+          </nav>
+        </form>
+      </section>
+    {% endblock %}
