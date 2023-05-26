@@ -43,7 +43,7 @@ export const addClass = (userID, ClassName) => {
       console.log(ClassName);
 
       if (!checkDup) {
-        user.classes.push(classItem);
+        user.classes.create(classItem);
         await user.save();
       }
       resolve("has resolved");
@@ -57,6 +57,7 @@ export const updateClass = (userID, classID, classInfo) => {
   return new Promise(async (resolve, reject) => {
     try {
       let {
+        teachers,
         dateStart,
         dateEnd,
         classRating,
@@ -64,8 +65,15 @@ export const updateClass = (userID, classID, classInfo) => {
         explanationRating,
         personalUnderstanding,
       } = classInfo;
+      console.log(classInfo)
       const user = await User.findById(userID);
-      const currentClass = await user.classes.findOneAndUpdate(classID);
+      const classes = user.classes;
+      const currentClass = classes.id(classID)
+      console.log('classes');
+      console.log(classes);
+      console.log('classID');
+      console.log(classID);
+      // const currentClass = await user.classes.name(classID);
       currentClass.set({
         dateStart: dateStart,
         dateEnd: dateEnd,
@@ -73,8 +81,9 @@ export const updateClass = (userID, classID, classInfo) => {
         difficultyRating: difficultyRating,
         explanationRating: explanationRating,
         personalUnderstanding: personalUnderstanding,
+        teachers: teachers
       });
-      user.save();
+      await user.save();
       resolve("has resolved");
     } catch (err) {
       reject(err);

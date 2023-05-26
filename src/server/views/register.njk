@@ -12,17 +12,17 @@
 
       <label class="input-group" for='name'>
         <span>Name</span>
-        <input type='text' name='name' id='name' placeholder='Your Name'>
+        <input type='text' name='name' id='name' required placeholder='Your Name'>
           {{ user.name }}
         </label>
         <label class="input-group" for='email'>
           <span> Email {{ user.email }} </span>
-          <input type='email' name='username' id='email' placeholder="your.email@hva.nl">
+          <input type='email' name='username' id='email' required pattern=".+@hva\.nl" title="Please provide only @hva.nl email address" placeholder="your.email@hva.nl">
           
           </label>
           <label class="input-group" for='id'>
             Student ID nr {{ user.id }}
-            <input type='number' name='id' id='id' placeholder='01234456'></label>
+            <input type='number' name='id' id='id' required min="1" max="999999999" placeholder='01234456'></label>
             <button type='submit'>Start Survey</button>
           </form>
           <div class='redirect'>

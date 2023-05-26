@@ -2,18 +2,14 @@
 {% block  content %}
 <section class="form-container">
     <h1>Welcome</h1>
-    <p>{{ user.id }}</p>
-    <p>{{ user.name }}</p>
+    <p>{{ user.name }} <span>{{ user.id }}</span></p>
     {# <p>{{{session}}}</p> #}
-  <div class="progress">
-
-
-  </div>
     <form action="/course/start" method="POST" enctype="multipart/form-data">
     <ul class="form-steps">
+        <li><a class="active" href=/course/start>0</a></li>
         {% for class in classes %}
           {% if class.name == currentClass.name %}
-            <li class='active'>{{ class.id }}</li>
+            <li>{{ class.id }}</li>
           {% elif class.id > currentClass.id %}
       <li><a disabled href=/course/{{class.slug}}>{{ class.id }}</a></li>
           {% else %}
@@ -31,24 +27,28 @@
         {% endfor %}
         {% if checked %}
           <div>
-            <input type="checkbox" name="classes" value="{{ class.slug }}" id="{{class.slug}}" checked>
               <label for='{{ class.slug }}'>
+                <input type="checkbox" name="classes" value="{{ class.slug }}" id="{{class.slug}}" checked>
                 {{ class.name }}
               </label>
             </div>
           {% else %}
             <div>
-              <input type="checkbox" name="classes" value="{{ class.slug }}" id="{{class.slug}}">
+              
                 <label for='{{ class.slug }}'>
+                  <input type="checkbox" name="classes" value="{{ class.slug }}" id="{{class.slug}}">
                   {{ class.name }}
+      
                 </label>
               </div>
             {% endif %}
           {% endfor %}
+          <nav>
           <button type="submit">Save Selection</button>
           {% if user.classes[0] %}
           <a href="/course/css-to-the-rescue">Next</a>  
           {% endif %}
+          </nav>
         </form>
       </section>
     {% endblock %}

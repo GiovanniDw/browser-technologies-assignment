@@ -37,8 +37,9 @@ const Classes = [
 const upload = multer();
 const router = express.Router();
 
-router.get("", (req, res, next) => {
-  res.redirect("/login");
+router.get("/", (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
+  next()
 });
 router.get("/start", start);
 router.post("/start", upload.array(), saveClasses);

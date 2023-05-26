@@ -9,9 +9,9 @@
       <p>user {{ user.name }}</p>
     {% endif %}
     {# <p>{{{session}}}</p> #}
-    <form id="{{currentCourse.slug}}" action="/course/survey/{{ currentCourse.slug }}" method="POST" enctype="multipart/form-data">
+    <form id="{{currentCourse.slug}}" action="/course/{{ currentCourse.slug }}" method="POST" enctype="multipart/form-data">
       <ul class="form-steps">
-        <li><a href=/course/start>{{ class.id }}</a></li>
+        <li><a href=/course/start>0</a></li>
         {% for class in classes %}
           {% if class.name == currentClass.name %}
             <li class='active'>{{ class.id }}</li>
@@ -22,12 +22,22 @@
           {% endif %}
         {% endfor %}
       </ul>
+      <div>
       <label for="name" class="input-group">
-        <span> Course Name </span> <input type="text" name="name" value="{{ currentClass.name }}"/>
+        <span> Course Name </span> <input type="text" disabled name="name" value="{{ currentClass.name }}"/>
       </label>
+      </div>
+      <div>
       <label for="teachers" class="input-group">
-        <span> Teachers </span> <input list="teachers" type="text" multiple name="teachers"/>
+        <span> Teachers </span>
+        
+        <input list="teachers" type="text" multiple required title="Are you sure you didn't have any Teachers?" value="{{currentClass.teachers}}" name="teachers"/>
+        {% for teacher in currentClassItem.teachers %}
+          <p>{{teacher}}</p>
+        {% endfor %}
+        <p>{{currentClassItem.teachers[0]}}</p>
       </label>
+      </div>
       <datalist id=teachers>
         <option value='{{currentClass.teachers}}'></option>          
         {% for teacher in currentClass.teachers %}
@@ -35,23 +45,28 @@
         {% endfor %}
       </datalist>
       <div>
-        <label for="dateStart">Start Date <input type="date" name="dateStart" default="{{ currentClass.dateStart }}"/>
+        <label for="dateStart">Start Date <input type="date" name="dateStart" required value="{{ currentClass.dateStart }}"/>
         </label>
-        <label for="dateEnd">End Date <input type="date" name="dateEnd" value="{{ currentClass.dateEnd }}"/>
+        <label for="dateEnd">End Date <input type="date" name="dateEnd" required value="{{ currentClass.dateEnd }}"/>
         </label>
       </div>
+      <div>
+        
       <label for="classRating" class="input-group">
       <span> Course Rating</span> 
       
-      <input list="rating" required type="range" min="0" max="10" value="0"  name="classRating" value="{{ currentClass.name }}"/>
+      <input list="rating" required type="range" min="0" max="10" default="0"  name="classRating" value="{{ currentClass.name }}"/>
       </label>
-      <label for="difficultyRating" class="input-group">
+      </div><div>
+      <label for="difficultyRating" class="input-group" min="0" max="10" default="0" >
       <span>  Course material (how difficult is it) </span>
       
-       <input list="rating" type="number" min="0" max="10" value="0" name="difficultyRating" value="{{ currentClass.name }}"/>
+       <input list="rating" type="range" min="0" max="10" default="0" name="difficultyRating" value="{{ currentClass.name }}"/>
 
 
       </label>
+      </div>
+      <div>
       <label for="explanationRating" class="input-group">
         <span>
           Explanation (how clear is it explained)
@@ -59,12 +74,15 @@
         
         <input list="rating" type="range" min="0" max="10" value="0" name="explanationRating" value="{{ currentClass.name }}"/>
       </label>
+      </div>
+      <div>
       <label for="personalUnderstanding">
         <span>
           Personal (how well do you understand it) 
         </span>
-        <input list="rating" required type="range" min="0" max="10" value="0" name="personalUnderstanding" value="{{ currentClass.name }}"/>
+        <input list="rating" required type="range" min="0" max="10" default="0" name="personalUnderstanding" value="{{ currentClass.name }}"/>
       </label>
+      </div>
       <datalist id="rating">
 
 <option>1</option>
@@ -78,11 +96,14 @@
 <option>9</option>
 <option>10</option>
 </datalist>
+<input type='hidden' id="nextClass" name="nextClass" value="/course{{nextCourse}}">
+  <nav>
+      <button type='submit' id="next-form" value="submit" rel="next" href="/course{{ nextCourse }}">Save</button>
+    </nav>
     </form>
-    <nav>
+  <nav>
       <a rel="prev" href="/course{{ prevCourse }}">back</a>
-      <a rel="next" href="/course{{ nextCourse }}">next</a>
-      <button type='submit' id="next-form" value="{{nextCourse}}" rel="next" href="/course{{ nextCourse }}">next</button>
+      <a rel="next" id="nextBtn" href="/course{{ nextCourse }}">next</a>
     </nav>
   </section>
 {% endblock %}

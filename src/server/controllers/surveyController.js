@@ -6,19 +6,21 @@ import { courseData } from "../helpers/courseData.js";
 
 console.log(courseData)
 
-const classes = [
-  "css-to-the-rescue",
-  "web-app-from-scratch",
-  "browser-technologies",
-  "progressive-web-apps",
-];
+// const classes = [
+//   "css-to-the-rescue",
+//   "web-app-from-scratch",
+//   "browser-technologies",
+//   "progressive-web-apps",
+// ];
 
 export const start = (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
+  console.log('req.user');
+console.log(req.user);
   let data = {
     message: "Hello world!",
     layout: "base.njk",
     title: "Start Survey",
-    user: req.user,
     userClasses: req.user.classes,
     classes: courseData,
     error: null
@@ -28,15 +30,17 @@ export const start = (req, res, next) => {
     
     console.log("requser");
     console.log(req.user);
+    data.user = req.user
     res.render("survey-start.njk", data);
   } catch (err) {
     data.error = err;
-    res.render("survey-start.njk", data);
     next(err);
   }
 };
 
 export const saveClasses = (req, res, next) => {
+
+
   let data = {
     message: "Hello world!",
     layout: "base.njk",
@@ -48,7 +52,7 @@ export const saveClasses = (req, res, next) => {
   };
   
 
-  if (!req.user) return res.redirect('/login')
+  if (!req.user) return res.redirect('/login');
 
   const userID = req.user._id;
   // const classInfo = req.body;
@@ -59,25 +63,26 @@ export const saveClasses = (req, res, next) => {
     console.log(req.user)
     
     const selectedClasses = req.body.classes;
+    console.log('selectedClasses');
     console.log(selectedClasses);
 
     // const thisUser = await User.findById(userID);
     // data.classes = thisUser.classes
 
-    if (classes.some((obj) => obj.name == selectedClasses)) {
-      // classID === obj._id;
-      console.log('if')
-      // console.log(classID);
-      // return res.redirect(`/course/survey/${classes[0].name}`)
-    } else {
-      console.log('else')
-      // console.log("no calss page");
-    }
+    // if (classes.some((obj) => obj.name == selectedClasses)) {
+    //   // classID === obj._id;
+    //   console.log('if')
+    //   // console.log(classID);
+    //   // return res.redirect(`/course/survey/${classes[0].name}`)
+    // } else {
+    //   console.log('else')
+    //   // console.log("no calss page");
+    // }
 
 
 
 
-if  (!req.user.classes) {
+if  (req.user.classes) {
    Promise.all(selectedClasses.map(async (element) => {
     console.log('element');
     console.log(element);
@@ -98,7 +103,7 @@ if  (!req.user.classes) {
     }
   }));
 } else {
-  return res.redirect('/course/css-to-the-rescue')
+  return res.redirect('/course/css-to-the-rescue');
 }
   
 
@@ -144,41 +149,44 @@ if  (!req.user.classes) {
     // } else {
     //   res.redirect("back");
     // }
-    res.render("survey-start.njk", data);
-    next()
+    // res.render("survey-start.njk", data);
+    return res.redirect('/course/css-to-the-rescue');
   } catch (err) {
     // data.error = err
     next(err);
+    
   }
 };
 
 export const surveyClass = async (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
   try {
     const className = req.params.id;
+    const userID = req.user._id;
+    const thisUser = await User.findById(userID);
+    const { classes } = thisUser;
     // let classID = req.params.id;
     const { user } = req.user;
-    const userID = req.user._id;
+    
     // let thisClass = await User.findById(classID);
-    const thisUser = await User.findById(userID);
+    
 
-    const { classes } = thisUser;
+    
     // console.log("classes");
     // console.log(classes);
     // const {classes} = user;
     // console.log(user);
     // if(classID)
     if (classes.some((obj) => obj.name == className)) {
-      classID === obj._id;
+      // classID === obj._id;
+      data.currentClassItem = obj
       // console.log(classID);
       // return res.redirect(`/course/survey/${classes[0].name}`)
-    } else {
-      // console.log("no calss page");
     }
     let data = {
       message: "1",
       layout: "base.njk",
       title: "Nunjucks example",
-      user: req.user,
       classes: thisUser.classes,
       currentClass: req.params.name,
       currentPage: req.route.path,
@@ -193,9 +201,7 @@ export const surveyClass = async (req, res, next) => {
         data = {
           message: "2",
           layout: "base.njk",
-          title: "Nunjucks example",
-          user: req.user,
-          currentClass: i,
+          title: `${currentClass}`,
           nextClass: (i += 1),
           classes: thisUser.classes,
         };
@@ -210,20 +216,70 @@ export const surveyClass = async (req, res, next) => {
 };
 
 export const postSurveyClass = async (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
+  console.log('req.user')
+console.log(req.user)
   try {
+
+    const courseToSave = req.params.id
+    const className = req.params.id;
+    // const classInfo = req.body;
+  
+    const nextPage = req.body.nextClass;
+  
+    const {
+      dateStart,
+      dateEnd,
+      classRating,
+      difficultyRating,
+      explanationRating,
+      personalUnderstanding,
+      teachers
+    } = req.body;
+
     // console.log(req.body);
     const userID = req.user._id;
-    const classID = req.params.name;
     const thisUser = await User.findById(userID);
-    const thisClass = await Class.findById(classID);
-    const { classInfo } = req.body;
+    // const thisClass = await Class.findOne(className);
+    // console.log('thisClass')
+    // console.log(thisClass)
+    const {classes}= thisUser;
+    if (classes.some((obj) => obj.name == className)) {
+      // classID === obj._id;
+      const classItem = obj
+      let classID = classItem._id
+      const classInfo = {
+        dateStart,
+        dateEnd,
+        classRating,
+        difficultyRating,
+        explanationRating,
+        personalUnderstanding,
+        teachers
+      }
 
-    // await updateClass(userID, classID, classInfo);
-    console.log(classInfo);
-    const { classes } = req.user;
+      await updateClass(userID, classID, classInfo);
+      // console.log(classID);
+      // return res.redirect(`/course/survey/${classes[0].name}`)
+    }
+
+
+    
+
+    
+    
+
+ 
+
+    // console.log(classInfo);
+    // const { classes } = req.user;
+    next()
   } catch (err) {
+    
     console.log(err);
-    next(err);
+    next(err)
+
+    return res.redirect(nextPage);
   }
 };
 
@@ -240,7 +296,7 @@ const getObjBySlug = (objArray, slug) => {
   }
 
 export const courseElement = async (req, res, next) => {
-
+  if (!req.user) return res.redirect('/login');
 
 
 

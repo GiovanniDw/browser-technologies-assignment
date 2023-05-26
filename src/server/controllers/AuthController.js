@@ -169,7 +169,8 @@ export const login = async (req, res, next) => {
 
 export const doLogin = async (req, res, next) => {
   const { username, email, password, name, id } = req.body;
-console.log(req.body)
+  console.log('req.login')
+console.log(req.login)
 
   let data = {
     layout: 'base.njk',
@@ -179,7 +180,7 @@ console.log(req.body)
     error: '',
   };
   try {
-    if (username) {
+    if (req.body.username) {
       console.log(username)
       await User.findByUsername(username, username, function (err, user) {
         if (err) {
@@ -195,6 +196,8 @@ console.log(req.body)
               data.error = 'Email not found';
               res.render('login.njk', data);
             } else {
+              console.log('req.login')
+              console.log(req.login)
               res.redirect('/course/start');
             }
           });

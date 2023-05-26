@@ -53,9 +53,9 @@ router.post("/logout", logout);
 
 
 
-// router.get("/course", (req, res, next) => {
-//   res.redirect("/login");
-// });
+router.get("/course", (req, res, next) => {
+  if (!req.user) return res.redirect('/login');
+});
 
 router.get("/course/start", start);
 router.post("/course/start", upload.array(), saveClasses);
@@ -76,9 +76,10 @@ router.get("/course/end", (req, res, next) => {
 courseData.forEach((course) => {
   console.log("Name: " + course.name + ", Route: " + course.slug);
   router.get(`/course/${course.slug}`, courseElement);
+  router.post(`/course/${course.slug}`, upload.none(), postSurveyClass);
 });
 
-router.post("/course/:id", upload.none(), postSurveyClass);
+// router.post("/course/:id", upload.none(), postSurveyClass);
 
 
 // router.get('/welcome', async (req, res, next)=> {

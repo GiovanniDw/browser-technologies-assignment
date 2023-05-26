@@ -6,7 +6,6 @@ import mongooseAutoPopulate from "mongoose-autopopulate";
 const WORK_FACTOR = 10;
 
 const ClassSchema = new Schema({
-  _id: Number,
   name: {
     type: String,
   },
@@ -55,11 +54,7 @@ const UserSchema = new Schema({
     unique: true,
   },
   password: String,
-  classes: [
-    {
-      type: ClassSchema,
-    },
-  ],
+  classes: [ClassSchema],
   admin: Boolean,
   currentClass: String,
 });

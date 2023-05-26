@@ -17,7 +17,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   appType: 'custom',
-  base: "/",
+  base: "./",
   plugins: [commonjs(),],
   optimizeDeps: {exclude: ["fsevents"]},
   publicDir: './public',
@@ -40,7 +40,7 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     assetsDir: 'public',
-    outDir: 'docs',
+    outDir: 'build',
     sourcemap: true,
     manifest: true,
     ssrManifest: true,

@@ -130,6 +130,13 @@ ul.form-steps li.active +  li a {
   color: var(--color-text);
 }
 
+a {
+ 
+  cursor: pointer;
+  /* opacity: 0.5; */
+  text-decoration: inherit;
+}
+
 a:disabled {
   color: gray;
   cursor: not-allowed;
