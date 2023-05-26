@@ -1,0 +1,53 @@
+{
+  "name": "real-time-web",
+  "private": true,
+  "description": "Real Time Web Chat App",
+  "repository": "https://github.com/GiovanniDw/real-time-web.git",
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "pnpm@8.5.1",
+  "engines.node": "18",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon --inspect server/server.js -w server/",
+    "start": "NODE_ENV=production node server.js",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "connect": "^3.7.0",
+    "connect-ensure-login": "^0.1.1",
+    "connect-flash": "^0.1.1",
+    "connect-mongodb-session": "^3.1.1",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "errorhandler": "^1.5.1",
+    "express": "^4.18.2",
+    "express-nunjucks": "^2.2.5",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.0",
+    "mongoose-autopopulate": "^1.0.1",
+    "morgan": "^1.10.0",
+    "multer": "1.4.5-lts.1",
+    "nodemon": "^2.0.22",
+    "nunjucks": "^3.2.4",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^8.0.0",
+    "sass": "^1.62.1",
+    "vite-express": "^0.5.5"
+  },
+  "devDependencies": {
+      "chokidar": "^3.5.3",
+    "nodemon": "^2.0.22",
+    "vite": "^4.3.8"
+  }
+}
